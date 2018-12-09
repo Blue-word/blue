@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:42:"./application/index/view/liyou\u_info.html";i:1544346446;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:42:"./application/index/view/liyou\u_info.html";i:1544353976;}*/ ?>
 <!doctype html>
 <html class="no-js">
 <head>
@@ -16,7 +16,9 @@
 <div class="am-g">
  	<div class="article">
  		<div class="articleCover">
- 		<div class="articleCoverBack"><i class="am-icon-chevron-left"></i></div>
+ 		<div class="articleCoverBack">
+      <i class="am-icon-chevron-left" onClick="javascript :history.back(-1);" ></i>
+    </div>
  			<div class="articleCoverInfo">
  				<div class="newsListTitleLeft">
  					<div class="userHead">
@@ -50,7 +52,7 @@
       <div class="articleContentText">
         <h3>商品内容 </h3>
         <p>Do you want to be among the first to see a new online game? Do you wanna play a game that isnt even yet in stores? This app gives you all the unique moments of exploring, buying and playing a game before its released to public!</p>
-         <h3>Always appreciate feedback.</h3>
+         <h3>Always appreciate feedback</h3>
         <p>Just a simple design concept that helps you to focus better by blocking those social websites.</p>
         <p>Be sure to check attached realpixels, dark version and the interactions :) </p>
         <p><img src="/blue/public/static/assets_app/img/no01.png" ></p>

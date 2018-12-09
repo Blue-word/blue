@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:45:"./application/index/view/liyou\u_paiyang.html";i:1544346518;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:45:"./application/index/view/liyou\u_paiyang.html";i:1544352307;}*/ ?>
 <!doctype html>
 <html>
 <head>

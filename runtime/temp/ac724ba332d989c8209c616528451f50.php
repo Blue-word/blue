@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:50:"./application/index/view/liyou\u_paiyang_list.html";i:1544346143;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:50:"./application/index/view/liyou\u_paiyang_list.html";i:1544354822;}*/ ?>
 <!doctype html>
 <html class="no-js">
 <head>
@@ -14,15 +14,14 @@
 </head>
 <body>
 <div class="am-g">
-  <header data-am-widget="header"
-          class="amazeMarchHead am-header am-header-default">
-     
-
-      <h1 class="amazeMarchHeadTitle am-header-title">
-      		<i class="am-icon-vimeo"></i>imeo
-      
-      </h1>
-
+  <header data-am-widget="header" class="amazeMarchHead am-header am-header-default">
+    <div class="articleCoverBack" style="background: #fff;color: #00000094;left: 5px;top: 5px;">
+      <i class="am-icon-chevron-left" onClick="javascript :history.back(-2);"></i>
+      <!-- <a href="<?php echo U('liyou/index'); ?>"></a> -->
+    </div>
+    <h1 class="amazeMarchHeadTitle am-header-title">
+    		<i class="am-icon-vimeo"></i>U选
+    </h1>
   </header>
 
   <div class="newsList">
