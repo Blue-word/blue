@@ -233,7 +233,14 @@ class Goods extends Base{
     }
 
     public function category_list(){
-        $list = M('category')->select();
+        $type = input('post.type',1);
+        $id = input('post.id');
+        if ($id) {
+            $where['pid'] = $id;
+        }
+        $where['type'] = $type;
+        $where['is_delete'] = 0;
+        $list = M('category')->where($where)->select();
         // foreach ($list as $k => $v) {
         //  // $list[$k]['admin_name'] = M('admin')->where('uid',$v['uid'])->getField('name');
         //  $list[$k]['sex'] = $this->sex[$v['sex']];
@@ -376,6 +383,189 @@ class Goods extends Base{
             $this->assign('info',$info);
         }
         // dump($info);
+        return $this->fetch();
+    }
+    /**
+     * 
+     *
+     * @author 蓝勇强 2018-12-14
+     * @return [type] [description]
+     */
+    public function tao_goods_list(){
+        $category = input('post.category');
+        if ($category) {
+            $where['category'] = $category;
+        }
+        $where['is_delete'] = 0;
+        $list = M('tao_goods')->where($where)->select();
+        if ($list) {
+            foreach ($list as $key => $value) {
+                $list[$key]['category_name'] = M('category')->where('id',$value['id'])->getField('name');
+                $list[$key]['add_time'] = date('Y-m-d H:i',$value['add_time']);
+            }
+        }
+
+        // dump($list);
+        $this->assign('list',$list);
+        return $this->fetch();
+    }
+
+    public function tao_goods_info(){
+        $id = input('id');
+        if($id){
+            $info = M('goods')->where('id',$id)->find();
+            // $info['start_time'] = date('Y-m-d H:i:s',$info['start_time']);
+            // $info['end_time'] = date('Y-m-d H:i:s',$info['end_time']);
+            $picture = explode(',',$info['picture']);
+            $this->assign('info',$info);
+        }
+        $act = empty($id) ? 'add' : 'edit';
+        // dump($info);
+        $this->assign('act',$act);
+        $this->assign('pic_list',$picture);
+        return $this->fetch();
+    }
+
+    public function tao_goods_handle(){
+        $data = input('post.');
+        $model = model('TaoGoods');
+        // dump($data);die;
+        // $data['picture'] = $data['image'];
+        if($data['act'] == 'add'){
+            unset($data['id'],$data['image']);           
+            $data['add_time'] = time();
+            $data['picture'] = implode(',',$data['picture']);
+            // dump($data);
+            $res = $model->allowField(true)->save($data);
+        }
+        
+        if($data['act'] == 'edit'){
+            $data['picture'] = implode(',',$data['picture']);
+            // dump($data);
+            $res = $model->allowField(true)->save($data,['id' => $data['id']]);
+        }
+        
+        // if($data['act'] == 'del'){
+        //     $res = D('new_course')->where('id', $data['id'])->save(['del_status'=>1]);
+        //     exit(json_encode($data));
+        // }
+
+        // if($data['act'] == 'audit' || $data['act'] == 'ajax'){
+        //     $audit_uid = Session::get('uid');
+        //     $res = M('NewCourse')->where('id', $data['id'])->save(['status'=>$data['status'],'audit_uid'=>$audit_uid]);
+        //     // exit(json_encode($data));
+        //     // dump($res);
+        // }
+        
+        // if($res){
+        //     $this->success("操作成功",U('index/pacificocean/course_list'));
+        // }else{
+        //     $this->error("操作失败",U('index/pacificocean/course_info',array('id'=>$data['id'])));
+        // }
+    }
+
+    public function tao_goods_view(){
+        $id = input('id');
+        if($id){
+            $info = M('goods')->where('id',$id)->find();
+            // $info['start_time'] = date('Y-m-d H:i:s',$info['start_time']);
+            // $info['end_time'] = date('Y-m-d H:i:s',$info['end_time']);
+            // $info['admin_name'] = M('admin')->where('uid',$info['uid'])->getField('name');
+            // $info['audit_name'] = M('admin')->where('uid',$info['audit_uid'])->getField('name');
+            $this->assign('info',$info);
+        }
+        // dump($info);
+        return $this->fetch();
+    }
+
+    /**
+     * 
+     *
+     * @author 蓝勇强 2018-12-14
+     * @return [type] [description]
+     */
+    public function activity_list(){
+        $status = input('post.status');
+        if ($status) {
+            $where['status'] = $status;
+        }
+        $where['is_delete'] = 0;
+        $list = M('activity')->where($where)->order('id desc')->select();
+        if ($list) {
+            foreach ($list as $key => $value) {
+                $list[$key]['start_time'] = date('Y-m-d H:i',$value['start_time']);
+                $list[$key]['end_time'] = date('Y-m-d H:i',$value['end_time']);
+                $list[$key]['picture'] = $this->imageChange($value['picture']);
+            }
+        }
+        $this->assign('list',$list);
+        return $this->fetch();
+    }
+
+    public function activity_info(){
+        $id = input('id');
+        if($id){
+            $info = M('activity')->where('id',$id)->find();
+            $info['start_time'] = date('Y-m-d H:i:s',$info['start_time']);
+            $info['end_time'] = date('Y-m-d H:i:s',$info['end_time']);
+            $info['picture'] = $this->imageChange($info['picture']);
+            // $picture = explode(',',$info['picture']);
+            $this->assign('info',$info);
+        }
+        $act = empty($id) ? 'add' : 'edit';
+        // dump($info);
+        $this->assign('act',$act);
+        $this->assign('pic_list',$picture);
+        return $this->fetch();
+    }
+
+    public function activity_handle(){
+        $data = input('post.');
+        $model = model('Activity');
+        // dump($data);die;
+        // $data['picture'] = $data['image'];
+        if($data['act'] == 'add'){
+            unset($data['id'],$data['image']);           
+            $data['add_time'] = time();
+            $data['picture'] = implode(',',$data['picture']);
+            // dump($data);
+            $res = $model->allowField(true)->save($data);
+        }
+        
+        if($data['act'] == 'edit'){
+            $data['picture'] = implode(',',$data['picture']);
+            // dump($data);
+            $res = $model->allowField(true)->save($data,['id' => $data['id']]);
+        }
+        
+        // if($data['act'] == 'del'){
+        //     $res = D('new_course')->where('id', $data['id'])->save(['del_status'=>1]);
+        //     exit(json_encode($data));
+        // }
+
+        // if($data['act'] == 'audit' || $data['act'] == 'ajax'){
+        //     $audit_uid = Session::get('uid');
+        //     $res = M('NewCourse')->where('id', $data['id'])->save(['status'=>$data['status'],'audit_uid'=>$audit_uid]);
+        //     // exit(json_encode($data));
+        //     // dump($res);
+        // }
+        
+        // if($res){
+        //     $this->success("操作成功",U('index/pacificocean/course_list'));
+        // }else{
+        //     $this->error("操作失败",U('index/pacificocean/course_info',array('id'=>$data['id'])));
+        // }
+    }
+
+    public function activity_view(){
+        $id = input('id');
+        if($id){
+            $info = M('activity')->where('id',$id)->find();
+            $info['start_time'] = date('Y-m-d H:i:s',$info['start_time']);
+            $info['end_time'] = date('Y-m-d H:i:s',$info['end_time']);
+            $info['picture'] = $this->imageChange($info['picture']);
+            $this->assign('info',$info);
+        }
         return $this->fetch();
     }
 

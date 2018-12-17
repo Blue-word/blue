@@ -24,5 +24,7 @@ return [
       'dispatch_error_tmpl' => 'index:dispatch_jump',
       //默认成功跳转对应的模板文件
       'dispatch_success_tmpl' => 'index:dispatch_jump',
+      //图片转化路径
+      'image' => '/blue/public',
 
 ];
