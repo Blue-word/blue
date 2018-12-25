@@ -8,15 +8,16 @@
     <title>商品信息</title>
 
     <link rel="shortcut icon" href="favicon.ico"> <link href="__PUBLIC__/static/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/static/css/bootstrap-select.min.css?v=3.3.6" rel="stylesheet">
     <link href="__PUBLIC__/static/css/font-awesome.css?v=4.4.0" rel="stylesheet">
     <link href="__PUBLIC__/static/css/plugins/iCheck/custom.css" rel="stylesheet">
     <!-- <link href="__PUBLIC__/static/css/animate.css" rel="stylesheet"> -->
     <link href="__PUBLIC__/static/css/style.css?v=4.1.0" rel="stylesheet">
     <!-- 百度地图 -->
-    <style type="text/css">
+    <!-- <style type="text/css">
     #container {width: 1230px;height: 380px;overflow: hidden;margin:0;font-family:"微软雅黑";}
     </style>
-    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=uzZhQDkARtTIbiTOydzupoQE7wQ4WkNn"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=uzZhQDkARtTIbiTOydzupoQE7wQ4WkNn"></script> -->
     <!-- 图片上传 -->
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/static/plugins/fileinput/css/fileinput.min.css" />
     <!-- <link rel="stylesheet" type="text/css" href="__PUBLIC__/static/css/bootstrap.css" /> -->
@@ -79,10 +80,27 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">商品类别</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control m-b" name="cate" required="" aria-required="true">
-                                        <option value="">请选择类别</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
+                                    <select  class="form-control selectpicker show-tick reset" id="select-first" name="firstValue" data-url="{:U('Goods/getSonCategory')}" data-live-search="true"  data-size="6">
+                                        <option value="">请选择分类</option>
+                                        <foreach name="category_first" item="vo">
+                                            <option value="{$vo.id}">{$vo.name}</option>
+                                        </foreach>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2" id="box-select-second" style="display:none;">
+                                    <select  class="form-control selectpicker show-tick reset" id="select-second" name="sonCategoryId" data-url="{:U('Goods/getSonCategory')}" data-live-search="true"  data-size="6">
+                                        <option value="">请选择分类</option>
+                                        <!-- <foreach name="category_first" item="vo">
+                                            <option value="{$vo.id}">{$vo.name}</option>
+                                        </foreach> -->
+                                    </select>
+                                </div>
+                                <div class="col-sm-2" id="box-select-third" style="display:none;">
+                                    <select  class="form-control selectpicker show-tick reset" id="select-third" name="category" data-url="{:U('Goods/getSonCategory')}" data-live-search="true"  data-size="6" required="" aria-required="true">
+                                        <option value="">请选择分类</option>
+                                        <!-- <foreach name="category_first" item="vo">
+                                            <option value="{$vo.id}">{$vo.name}</option>
+                                        </foreach> -->
                                     </select>
                                 </div>
                             </div>
@@ -129,6 +147,7 @@
     <script src="__PUBLIC__/static/js/jquery-2.1.4.js"></script>
     <script src="__PUBLIC__/static/js/jquery.min.js?v=2.1.4"></script>
     <script src="__PUBLIC__/static/js/bootstrap.min.js?v=3.3.6"></script>
+    
 
     <!-- 自定义js -->
     <script src="__PUBLIC__/static/js/content.js?v=1.0.0"></script>
@@ -142,13 +161,100 @@
     <!-- iCheck -->
     <script src="__PUBLIC__/static/js/plugins/iCheck/icheck.min.js"></script>
     <!-- 图片上传 -->
-    
     <script src="__PUBLIC__/static/plugins/fileinput/js/plugins/canvas-to-blob.min.js"></script>
     <script src="__PUBLIC__/static/plugins/fileinput/js/fileinput.min.js"></script>
     <script src="__PUBLIC__/static/plugins/fileinput/js/fileinput_locale_zh.js"></script>
-     
+    <!-- bootstrap select -->
+    <script src="__PUBLIC__/static/js/bootstrap-select.min.js?v=3.3.6"></script>
+    <script src="__PUBLIC__/static/js/defaults-zh_CN.min.js?v=3.3.6"></script>
 
     <script>
+        //三级联动
+        $(document).ready(function () {
+            $('#select-first').change(function () {
+                //清空二级和三级select的旧选项
+                $("#select-second").empty();
+                $("#select-third").empty();
+                //一级select的值
+                var firstValue = $(this).val();
+                //如果一级select的值为null，隐藏二、三级select,并返回
+                if(firstValue == ''){
+                    $("#select-second").fadeOut("slow");
+                    $("#select-third").fadeOut("slow");
+                    return;
+                }
+                var url = $("#select-second").attr('data-url');
+                console.log(url)
+                console.log(firstValue)
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {category_id: firstValue,type : 2},
+                    success : function (res) {
+                        console.log(res)
+                        //遍历回传的数据添加到二级select
+                        var option = '<option value="">请选择分类</option>';
+                        $("#select-second").append(option);
+                        $.each(res, function(key, secondData) {
+                            var option = '<option value="'+secondData.id+'">'+secondData.name+'</option>';
+                            console.log(option)
+                            $("#select-second").append(option);
+                               
+                        })
+                        //bootstap-select控件:需刷新对应select                           
+                        $("#select-second").selectpicker('refresh');
+                        //二级select展示
+                        $("#box-select-second").fadeIn("slow");
+                        //三级select隐藏
+                        $("#box-select-third").fadeOut("slow");
+                    },
+                    error : function (res) {
+                        // body...
+                    }
+                });
+                
+            });
+            $("#select-second").change(function(){
+                //清空三级slect的旧选项                
+                $("#select-third").empty();
+                //二级select的值
+                var secondValue = $(this).val();
+                //如果一级select的值为null，隐藏三级select,并返回
+                if(secondValue == ''){                    
+                  $("#select-third").fadeOut("slow");
+                  return;
+                } 
+                var url = $("#select-third").attr('data-url');
+                //根据二级的值改变，异步获取数据更新三级的选项    
+                $.ajax({    
+                    type:'get',        
+                    url:url,    
+                    data: {category_id: secondValue,type : 3},    
+                    cache:false,    
+                    dataType:'json',    
+                    success:function(res){                              
+                        //遍历回传的数据添加到二级select
+                        var option = '<option value="">请选择分类</option>';
+                        $("#select-third").append(option);
+                        $.each(res, function(key, secondData) {
+                            var option = '<option value="'+secondData.id+'">'+secondData.name+'</option>';
+                            console.log(option)
+                            $("#select-third").append(option);
+                               
+                        })
+                        //bootstap-select控件:需刷新对应select                           
+                        $("#select-third").selectpicker('refresh');
+                         //三级select显示出来
+                        $("#box-select-third").fadeIn("slow");                                                 
+                    },
+                    error:function(){ 
+                        alert("请求失败")
+                    }
+                });
+            });  
+             
+        });
         // $(document).ready(function () {
         //     $('.i-checks').iCheck({
         //         checkboxClass: 'icheckbox_square-green',
@@ -162,9 +268,9 @@
         $("#album").fileinput({
             language:'zh',//语言
             showRemove:false,
-            //initialPreviewShowDelete:false,
-            //resizeImage:true,
-            //showUploadedThumbs:false,
+            // initialPreviewShowDelete:false,
+            // resizeImage:true,
+            // showUploadedThumbs:false,
             uploadUrl:"__APP__/index/Uploadify/imgUp/rootpath/notice/savepath/picture/type/2",//上传地址
             allowedFileExtensions : ['jpg', 'png','gif','jpeg'],//允许的文件后缀
             maxFilesNum: 10,//最大文件上传数量

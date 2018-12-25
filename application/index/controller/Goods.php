@@ -5,7 +5,7 @@ use think\Model;
 use think\Session;
 use think\db\Query;
 
-class Goods extends Base{
+class Goods extends Common{
 
     public function _initialize(){
         parent::_initialize();  //关闭时不调用父类检验token
@@ -72,10 +72,14 @@ class Goods extends Base{
             $picture = explode(',',$info['picture']);
             $this->assign('info',$info);
         }
+        $category_where['level'] = 1;
+        $category_where['is_delete'] = 0;
+        $category_first = M('category')->where($category_where)->select();
         $act = empty($id) ? 'add' : 'edit';
         // dump($info);
         $this->assign('act',$act);
         $this->assign('pic_list',$picture);
+        $this->assign('category_first',$category_first);
         return $this->fetch();
     }
 
@@ -238,7 +242,7 @@ class Goods extends Base{
         if ($id) {
             $where['pid'] = $id;
         }
-        $where['type'] = $type;
+        $where['level'] = $type;
         $where['is_delete'] = 0;
         $list = M('category')->where($where)->select();
         // foreach ($list as $k => $v) {
@@ -404,8 +408,8 @@ class Goods extends Base{
                 $list[$key]['add_time'] = date('Y-m-d H:i',$value['add_time']);
             }
         }
-
-        // dump($list);
+        
+        // dump($category_first);
         $this->assign('list',$list);
         return $this->fetch();
     }
@@ -419,10 +423,14 @@ class Goods extends Base{
             $picture = explode(',',$info['picture']);
             $this->assign('info',$info);
         }
+        $category_where['level'] = 1;
+        $category_where['is_delete'] = 0;
+        $category_first = M('category')->where($category_where)->select();
         $act = empty($id) ? 'add' : 'edit';
         // dump($info);
         $this->assign('act',$act);
         $this->assign('pic_list',$picture);
+        $this->assign('category_first',$category_first);
         return $this->fetch();
     }
 
@@ -434,7 +442,11 @@ class Goods extends Base{
         if($data['act'] == 'add'){
             unset($data['id'],$data['image']);           
             $data['add_time'] = time();
-            $data['picture'] = implode(',',$data['picture']);
+            if ($data['picture']) {
+                $data['picture'] = implode(',',$data['picture']);
+            }else{
+                $data['picture'] = '';
+            }
             // dump($data);
             $res = $model->allowField(true)->save($data);
         }
@@ -476,6 +488,15 @@ class Goods extends Base{
         }
         // dump($info);
         return $this->fetch();
+    }
+    public function getSonCategory(){
+        $id = input('category_id');
+        $type = input('type');
+        $category_where['pid'] = $id;
+        $category_where['level'] = $type;
+        $category_where['is_delete'] = 0;
+        $category_first = M('category')->where($category_where)->select();
+        $this->ajaxReturn($category_first);
     }
 
     /**
@@ -522,11 +543,14 @@ class Goods extends Base{
     public function activity_handle(){
         $data = input('post.');
         $model = model('Activity');
-        // dump($data);die;
+        dump($data);
+        // die;
         // $data['picture'] = $data['image'];
         if($data['act'] == 'add'){
             unset($data['id'],$data['image']);           
             $data['add_time'] = time();
+            $data['start_time'] = strtotime($data['start_time']);
+            $data['end_time'] = strtotime($data['end_time']);
             $data['picture'] = implode(',',$data['picture']);
             // dump($data);
             $res = $model->allowField(true)->save($data);

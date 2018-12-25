@@ -14,20 +14,20 @@ class Admin extends Base{
             $this->error("您已登录",U('index/index/index'));
         }
         if(request()->isPost()){
-            $condition['user_name'] = I('post.name/s');
+            $condition['name'] = I('post.name/s');
             $condition['password'] = I('post.password/s');
-            if(!empty($condition['user_name']) && !empty($condition['password'])){
+            if(!empty($condition['name']) && !empty($condition['password'])){
                 // $condition['password'] = encrypt($condition['password']);
                 $admin_info = Db::table('admin')->alias('a')->join('admin_role b','a.role_id = b.role_id','INNER')->where($condition)->find();
                 print_r(Db::getLastsql());
-                if($admin_info){
+                if(!$admin_info){
                     // if ($admin_info['delete_status'] == 0) {  //账号被高级别管理员停用
                     //     $this->error("您的管理员账号已被停用，请联系上级管理员",U('index/admin/login'));
                     // }
                     session('uid',$admin_info['admin_uid']);
                     session('role_id',$admin_info['role_id']);
                     session('role_name',$admin_info['role_name']);
-                    session('admin_name',$admin_info['user_name']);
+                    session('admin_name',$admin_info['name']);
                     session('act_list',$admin_info['act_list']);
                     // M('admin')->where('uid',$admin_info['admin_uid'])->save(array('last_login'=>time(),'last_ip'=>getIP()));
                     // adminLog($admin_info['user_name']."登录");
