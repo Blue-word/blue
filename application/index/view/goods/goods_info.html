@@ -58,7 +58,13 @@
                                 <label class="col-sm-2 control-label">商品名称</label>
                                 <div class="col-sm-10">
                                     <input type="text" placeholder="商品名称" name="title" id="title" class="form-control" required="" aria-required="true" value="{$info.title}">
-                                    商品名称
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">商品详情</label>
+                                <div class="col-sm-10">
+                                    <input type="text" placeholder="请输入标题" name="content" class="form-control" required="" aria-required="true" value="{$info.content}">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -71,11 +77,21 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">商品详情</label>
-                                <div class="col-sm-10">
-                                    <input type="text" placeholder="请输入标题" name="content" class="form-control" required="" aria-required="true" value="{$info.content}">
+                                <label class="col-sm-2 control-label">点位选择</label>
+                                <div class="col-sm-2">
+                                    <select class="form-control selectpicker" data-live-search="true" multiple>
+                                        <foreach name="area" item="vo">
+                                            <optgroup label="{$vo.name}">
+                                                <foreach name="vo.point" item="fo">
+                                                    <option value="{$fo.id}">{$fo.name}</option>
+                                                </foreach>
+                                            </optgroup> 
+                                            <!-- <option value="{$vo.id}">{$vo.name}</option> -->
+                                        </foreach>     
+                                    </select>
                                 </div>
                             </div>
+                            
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">商品类别</label>
@@ -106,9 +122,16 @@
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
+                                <label class="col-sm-2 control-label">封面图片</label>
+                                <div class="col-sm-8">
+                                    <input id="cover" class="file" type="file" name="image[]" aria-required="false">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
                                 <label class="col-sm-2 control-label">商品轮播图片</label>
                                 <div class="col-sm-8">
-                                    <input id="album" class="file" type="file" name="image[]" aria-required="false">
+                                    <input id="album" class="file" type="file" name="image[]" aria-required="false" multiple>
                                 </div>
                             </div>
                             <!-- <div class="hr-line-dashed"></div>
@@ -163,7 +186,7 @@
     <!-- 图片上传 -->
     <script src="__PUBLIC__/static/plugins/fileinput/js/plugins/canvas-to-blob.min.js"></script>
     <script src="__PUBLIC__/static/plugins/fileinput/js/fileinput.min.js"></script>
-    <script src="__PUBLIC__/static/plugins/fileinput/js/fileinput_locale_zh.js"></script>
+    <script src="__PUBLIC__/static/plugins/fileinput/js/locales/zh.js"></script>
     <!-- bootstrap select -->
     <script src="__PUBLIC__/static/js/bootstrap-select.min.js?v=3.3.6"></script>
     <script src="__PUBLIC__/static/js/defaults-zh_CN.min.js?v=3.3.6"></script>
@@ -267,41 +290,37 @@
         //展示图片
         $("#album").fileinput({
             language:'zh',//语言
-            showRemove:false,
-            // initialPreviewShowDelete:false,
-            // resizeImage:true,
-            // showUploadedThumbs:false,
+            showRemove:true,    //是否显示移除按钮
+            initialPreviewShowDelete:true,
+            resizeImage:true,   //调整图片
+            showUploadedThumbs:true,
             uploadUrl:"__APP__/index/Uploadify/imgUp/rootpath/notice/savepath/picture/type/2",//上传地址
             allowedFileExtensions : ['jpg', 'png','gif','jpeg'],//允许的文件后缀
             maxFilesNum: 10,//最大文件上传数量
-            deleteUrl:'__APP__/index/Uploadify/delupload',//删除地址
-            //uploadAsync:false,//同步
+            // deleteUrl:'__APP__/index/Uploadify/imageDelupload',//删除地址
+            //uploadAsync:false,//是否异步,默认true
             enctype: 'multipart/form-data',
-            overwriteInitial: false, //不覆盖已存在的图片
-            //deleteExtraData,
+            // overwriteInitial: false, //不覆盖已存在的图片
+            //deleteExtraData,  //删除图片时额外传入的参数,默认{}
             initialPreviewAsData: true,
-            initialPreview: [       //初始化展示
-                <foreach name='pic_list' item='picInfo'>
-                "{$picInfo}",
-                </foreach>
-            ],
-            initialPreviewConfig: [        //预览图配置
-            <foreach name='pic_list' item='picInfo'>
-            { 
-                width: '213.33px', 
-                url: '__APP__/index/Uploadify/delupload', // server delete action 
-                showUpload:false, 
-                extra: {filename: "{$picInfo}"},
-                // previewAsData:false,
-                key:"{$picInfo}",
-            },
-            </foreach>
+            // initialPreview: [       //初始化展示
+            //     <foreach name='pic_list' item='picInfo'>
+            //     "{$picInfo}",
+            //     </foreach>
+            // ],
+            // initialPreviewConfig: [        //预览图配置
+            // <foreach name='pic_list' item='picInfo'>
+            // { 
+            //     width: '213.33px', 
+            //     // url: '__APP__/index/Uploadify/imageDelupload', // server delete action 
+            //     showUpload:false, 
+            //     extra: {filename: "{$picInfo}"},
+            //     // previewAsData:false,
+            //     key:"{$picInfo}",
+            // },
+            // </foreach>
             ],
         }).on("fileuploaded",function(event,data,previewId,index){         //异步上传上传回调函数
-                // console.log(event)
-                // console.log(data)
-                // console.log(previewId)
-                // console.log(index)
                 var num = data.response['initialPreviewConfig'].length;
                 var str = "";
                 for(i=0;i<num;i++){
@@ -310,10 +329,56 @@
                     console.log(str)
                 }
                 $("#hidden_val").append(str);
-                // alert(url);
             // alert(data.response['initialPreviewConfig'][0]['key']);
         }).on("filedeleted",function(event,key){          //删除回调函数
-            // alert(key);
+            $("input[value='"+key+"']").remove();
+        });
+        $("#cover").fileinput({
+            language:'zh',//语言
+            showRemove:true,    //是否显示移除按钮
+            initialPreviewShowDelete:true,
+            resizeImage:true,   //调整图片
+            showUploadedThumbs:true,
+            uploadUrl:"__APP__/index/Uploadify/imgUp/rootpath/notice/savepath/picture/type/2",//上传地址
+            allowedFileExtensions : ['jpg', 'png','gif','jpeg'],//允许的文件后缀
+            maxFilesNum: 1,//最大文件上传数量
+            // deleteUrl:'__APP__/index/Uploadify/imageDelupload',//删除地址
+            //uploadAsync:false,//是否异步,默认true
+            enctype: 'multipart/form-data',
+            // overwriteInitial: false, //不覆盖已存在的图片
+            //deleteExtraData,  //删除图片时额外传入的参数,默认{}
+            dropZoneEnabled: false,     //是否显示拖拽区域
+            initialPreviewAsData: true,
+            // initialPreview: [       //初始化展示
+            //     <foreach name='pic_list' item='picInfo'>
+            //     "{$picInfo}",
+            //     </foreach>
+            // ],
+            // initialPreviewConfig: [        //预览图配置
+            // <foreach name='pic_list' item='picInfo'>
+            // { 
+            //     width: '213.33px', 
+            //     // url: '__APP__/index/Uploadify/imageDelupload', // server delete action 
+            //     showUpload:false, 
+            //     extra: {filename: "{$picInfo}"},
+            //     // previewAsData:false,
+            //     key:"{$picInfo}",
+            // },
+            // </foreach>
+            ],
+        }).on("fileuploaded",function(event,data,previewId,index){         //异步上传上传回调函数
+                console.log(event)
+                console.log(data)
+                var num = data.response['initialPreviewConfig'].length;
+                var str = "";
+                for(i=0;i<num;i++){
+                    var url = data.response['initialPreviewConfig'][i]['key'];
+                    str += "<input type='hidden' name='cover_pic[]' value='"+url+"' id='"+previewId+"'/>";
+                    console.log(str)
+                }
+                $("#hidden_val").append(str);
+            // alert(data.response['initialPreviewConfig'][0]['key']);
+        }).on("filedeleted",function(event,key){          //删除回调函数
             $("input[value='"+key+"']").remove();
         });
     </script>

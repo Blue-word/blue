@@ -93,7 +93,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">商品图片</label>
                                 <div class="col-sm-8">
-                                    <input id="album" class="file" type="file" name="image[]" aria-required="false">
+                                    <input id="album" class="file-loading" type="file" name="image[]" multiple >
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -108,7 +108,7 @@
                                     <input type="hidden" name="id" value="{$info.id}">
                                     <button class="btn btn-primary" type="submit">提交</button>
                                     <a href="{:U('goods/tao_goods_list')}">
-                                        <button class="btn btn-white" type="button"><i class="fa fa-reply-all" >返回</i></button>
+                                        <button class="btn btn-white" type="button"><i class="fa fa-reply-all" >1返回</i></button>
                                     </a>
                                 </div>
                             </div>
@@ -140,7 +140,7 @@
     <!-- 图片上传 -->
     <script src="__PUBLIC__/static/plugins/fileinput/js/plugins/canvas-to-blob.min.js"></script>
     <script src="__PUBLIC__/static/plugins/fileinput/js/fileinput.min.js"></script>
-    <script src="__PUBLIC__/static/plugins/fileinput/js/fileinput_locale_zh.js"></script>
+    <script src="__PUBLIC__/static/plugins/fileinput/js/locales/zh.js"></script>
     <!-- bootstrap select -->
     <script src="__PUBLIC__/static/js/bootstrap-select.min.js?v=3.3.6"></script>
     <script src="__PUBLIC__/static/js/defaults-zh_CN.min.js?v=3.3.6"></script>
@@ -240,41 +240,37 @@
         //展示图片
         $("#album").fileinput({
             language:'zh',//语言
-            showRemove:false,
-            //initialPreviewShowDelete:false,
-            //resizeImage:true,
-            //showUploadedThumbs:false,
+            showRemove:true,    //是否显示移除按钮
+            initialPreviewShowDelete:true,
+            resizeImage:true,   //调整图片
+            showUploadedThumbs:true,
             uploadUrl:"__APP__/index/Uploadify/imgUp/rootpath/notice/savepath/picture/type/2",//上传地址
             allowedFileExtensions : ['jpg', 'png','gif','jpeg'],//允许的文件后缀
             maxFilesNum: 10,//最大文件上传数量
-            deleteUrl:'__APP__/index/Uploadify/delupload',//删除地址
-            //uploadAsync:false,//同步
+            // deleteUrl:'__APP__/index/Uploadify/imageDelupload',//删除地址
+            //uploadAsync:false,//是否异步,默认true
             enctype: 'multipart/form-data',
-            overwriteInitial: false, //不覆盖已存在的图片
-            //deleteExtraData,
+            // overwriteInitial: false, //不覆盖已存在的图片
+            //deleteExtraData,  //删除图片时额外传入的参数,默认{}
             initialPreviewAsData: true,
-            initialPreview: [       //初始化展示
-                <foreach name='pic_list' item='picInfo'>
-                "{$picInfo}",
-                </foreach>
-            ],
-            initialPreviewConfig: [        //预览图配置
-            <foreach name='pic_list' item='picInfo'>
-            { 
-                width: '213.33px', 
-                url: '__APP__/index/Uploadify/delupload', // server delete action 
-                showUpload:false, 
-                extra: {filename: "{$picInfo}"},
-                // previewAsData:false,
-                key:"{$picInfo}",
-            },
-            </foreach>
+            // initialPreview: [       //初始化展示
+            //     <foreach name='pic_list' item='picInfo'>
+            //     "{$picInfo}",
+            //     </foreach>
+            // ],
+            // initialPreviewConfig: [        //预览图配置
+            // <foreach name='pic_list' item='picInfo'>
+            // { 
+            //     width: '213.33px', 
+            //     // url: '__APP__/index/Uploadify/imageDelupload', // server delete action 
+            //     showUpload:false, 
+            //     extra: {filename: "{$picInfo}"},
+            //     // previewAsData:false,
+            //     key:"{$picInfo}",
+            // },
+            // </foreach>
             ],
         }).on("fileuploaded",function(event,data,previewId,index){         //异步上传上传回调函数
-                // console.log(event)
-                // console.log(data)
-                // console.log(previewId)
-                // console.log(index)
                 var num = data.response['initialPreviewConfig'].length;
                 var str = "";
                 for(i=0;i<num;i++){
@@ -283,10 +279,8 @@
                     console.log(str)
                 }
                 $("#hidden_val").append(str);
-                // alert(url);
             // alert(data.response['initialPreviewConfig'][0]['key']);
         }).on("filedeleted",function(event,key){          //删除回调函数
-            // alert(key);
             $("input[value='"+key+"']").remove();
         });
     </script>

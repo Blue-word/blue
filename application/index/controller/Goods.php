@@ -76,9 +76,24 @@ class Goods extends Common{
         $category_where['is_delete'] = 0;
         $category_first = M('category')->where($category_where)->select();
         $act = empty($id) ? 'add' : 'edit';
-        // dump($info);
+        //地区——点位
+        $area = M('area')->where('status',1)->select();
+        foreach ($area as $key => $value) {
+            $point_where['area'] = $value['id'];
+            $point_where['status'] = 1;
+            $point_info = M('point')->where($point_where)->select();
+            if ($point_info) {
+                $area[$key]['point'] = $point_info;
+            }else{
+                $area[$key]['point'] = array();
+            }
+            // dump($point_info);
+        }
+        // dump($area);
+        // dump($area);
         $this->assign('act',$act);
         $this->assign('pic_list',$picture);
+        $this->assign('area',$area);
         $this->assign('category_first',$category_first);
         return $this->fetch();
     }
@@ -90,11 +105,12 @@ class Goods extends Common{
         // $data['picture'] = $data['image'];
         if($data['act'] == 'add'){
             unset($data['id'],$data['image']);           
-            $data['time'] = time();
+            $data['add_time'] = time();
             // $data['start_time'] = strtotime($data['start_time']);
             // $data['end_time'] = strtotime($data['end_time']);
             // $data['uid']  = Session::get('uid');
             $data['picture'] = implode(',',$data['picture']);
+            $data['cover_pic'] = implode(',',$data['cover_pic']);
             // dump($data);
             $res = $model->allowField(true)->save($data);
         }

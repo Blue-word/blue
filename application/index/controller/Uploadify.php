@@ -183,17 +183,21 @@ class Uploadify extends Base{
         
         return $result;
     }
-
+    /**
+     * fileinput插件文件上传
+     *
+     * @author 蓝勇强 2018-12-27
+     * @return [type] [description]
+     */
     public function imgUp(){
         //接收传值
         $rootpath = I('get.rootpath','');
         $savepath = I('get.savepath','');
         $type = I('get.type',2);
         // return $rootpath;
-
         $upload_result = $this->imgUpload($rootpath,$savepath,$type);
+        // $this->ajaxReturn($upload_result,'json');
         // exit (json_encode($upload_result));
-        // return $upload_result;
         if($upload_result['code']){
             foreach($upload_result['fileinfo'] as $k => $v){
                 $initPrev[$k] = $v['relative_path'];
@@ -201,13 +205,13 @@ class Uploadify extends Base{
                     'caption' => $v['filename'], 
                     'size' => $v['size'], 
                     'width' => '213px', 
-                    'url' => '../Uploadify/delupload', 
+                    'url' => '../Uploadify/imageDelupload', 
                     'key' => $v['relative_path']
                 );
             }
             $return_data = array(
-                'initialPreview' => $initPrev,
-                'initialPreviewConfig' => $initPreConf,
+                'initialPreview' => $initPrev,  //初始化展示
+                'initialPreviewConfig' => $initPreConf, //预览图配置
                 'append' => true,
                 );
         }else{
@@ -237,12 +241,11 @@ class Uploadify extends Base{
     }
     
     /*
-              删除上传的图片
+       删除上传的图片
      */
     public function delupload(){
         $action = I('action');                
         $filename= I('filename');
-
         $filename= str_replace('../','',$filename);
         $filename= trim($filename,'.');
 		if($action=='del' && !empty($filename) && file_exists($filename)){
@@ -256,7 +259,27 @@ class Uploadify extends Base{
             exit;
         }
         return false;
-        // return '$filename';
+    }
+    /**
+     * fileinput图片删除
+     *
+     * @author 蓝勇强 2018-12-27
+     * @return [type] [description]
+     */
+    public function imageDelupload(){
+        $picture = I('key');                
+        $filename= trim($filename,'.');
+        $ROOT_PATH = str_replace("\blue","",ROOT_PATH);
+        $filename = $ROOT_PATH.$picture;
+        if(!empty($picture) && file_exists($filename)){
+            $size = getimagesize($filename);
+            $filetype = explode('/',$size['mime']);
+            if($filetype[0] != 'image'){
+                return false;
+            }
+            unlink($filename);
+        }
+        return true;
     }
 
     public function imageUp()
