@@ -253,22 +253,22 @@
             // overwriteInitial: false, //不覆盖已存在的图片
             //deleteExtraData,  //删除图片时额外传入的参数,默认{}
             initialPreviewAsData: true,
-            // initialPreview: [       //初始化展示
-            //     <foreach name='pic_list' item='picInfo'>
-            //     "{$picInfo}",
-            //     </foreach>
-            // ],
-            // initialPreviewConfig: [        //预览图配置
-            // <foreach name='pic_list' item='picInfo'>
-            // { 
-            //     width: '213.33px', 
-            //     // url: '__APP__/index/Uploadify/imageDelupload', // server delete action 
-            //     showUpload:false, 
-            //     extra: {filename: "{$picInfo}"},
-            //     // previewAsData:false,
-            //     key:"{$picInfo}",
-            // },
-            // </foreach>
+            initialPreview: [       //初始化展示
+                <foreach name='pic_list' item='picInfo'>
+                "{$picInfo}",
+                </foreach>
+            ],
+            initialPreviewConfig: [        //预览图配置
+            <foreach name='pic_list' item='picInfo'>
+            { 
+                width: '213.33px', 
+                // url: '__APP__/index/Uploadify/imageDelupload', // server delete action 
+                showUpload:false, 
+                extra: {filename: "{$picInfo}"},
+                // previewAsData:false,
+                key:"{$picInfo}",
+            },
+            </foreach>
             ],
         }).on("fileuploaded",function(event,data,previewId,index){         //异步上传上传回调函数
                 var num = data.response['initialPreviewConfig'].length;

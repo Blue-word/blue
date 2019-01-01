@@ -40,7 +40,8 @@
  				</div>
  			</div>
  			<div class="articleCoverBg"></div>
- 			<img src="__PUBLIC__/static/assets_app/img/bg.jpg" >
+      <!-- <img src="__PUBLIC__/static/assets_app/img/bg.jpg" > -->
+ 			<img src="{$info.cover_pic}" >
  		</div>
 
  		<div class="articleContent">
@@ -51,7 +52,10 @@
       <div class="articleContentText">
         <h3>商品内容 </h3>
         <p>{$info.content}</p>
-        <p><img src="__PUBLIC__/static/assets_app/img/no01.png" ></p>
+        <foreach name="$info.picture" item="vo">
+            <p><img src="{$vo}" ></p>
+        </foreach>
+        <!-- <p><img src="__PUBLIC__/static/assets_app/img/no01.png" ></p> -->
       </div>
       <div class="articleContentTag">
         <i>animal</i> <i>illustration</i> <i>symbol</i> <i>kangaroo</i>

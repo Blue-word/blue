@@ -50,7 +50,8 @@
                                             <th data-sortable="true">分类</th>
                                             <th data-sortable="true">图片</th>
                                             <th data-sortable="true">发布时间</th>
-                                            <th data-sortable="true">删除</th>
+                                            <th data-sortable="true">状态</th>
+                                            <!-- <th data-sortable="true">删除</th> -->
                                             <th width="50">操作</th>
                                         </tr>
                                     </thead>
@@ -63,9 +64,7 @@
                                                 </td>
                                                 <td align="center" class="">
                                                     <div>
-                                                        <a href="{:U('goods/tao_goods_list',array('id'=>$vo['id']))}" style="color: #676a6c">
-                                                            <button type="button" class="btn btn-outline btn-default" href="{:U('goods/tao_goods_list')}">{$vo.title} / 查看名单</button>
-                                                        </a>{$vo.title}
+                                                        <a href="{:U('goods/tao_goods_info',array('id'=>$vo['id']))}" style="color: #337ab7">{$vo.title}</a>
                                                     </div>
                                                 </td>
                                                 <td align="center" class="">
@@ -84,25 +83,23 @@
                                                     <div>{$vo.audit_name}</div>
                                                 </td> -->
                                                 <td align="center" class="change_td">
-                                                    <if condition="$vo.is_delete eq 0">
-                                                        <span class="label label-warning label1">否</span>
-                                                    <elseif condition="$vo.is_delete eq 1">
-                                                        <span class="label label-primary label2">是</span>
-                                                    <elseif condition="$vo.is_delete eq 2">
-                                                        <span class="label label-default label3">已拒绝</span>
-                                                    <elseif condition="$vo.is_delete eq -1">
-                                                        <span class="label label-default label4">已驳回</span>
+                                                    <if condition="$vo.status eq 0">
+                                                        <span class="label label-warning label1">待上架</span>
+                                                    <elseif condition="$vo.status eq 1">
+                                                        <span class="label label-primary label2">已上架</span>
+                                                    <elseif condition="$vo.status eq 2">
+                                                        <span class="label label-default label3">已下架</span>
                                                     </if>
                                                 </td>
                                                 <td align="center" class="">
                                                     <if condition="($vo.status eq 0) OR ($vo.status eq -1)">
                                                         <button class="btn btn-warning btn-sm demo4" value="{$vo.id}">审核</button>
                                                     <elseif condition="$vo.status eq 1">
-                                                        <button class="btn btn-warning btn-sm demo5" value="{$vo.id}">驳回</button>
+                                                        <button class="btn btn-warning btn-sm demo5" value="{$vo.id}">下架</button>
                                                     </if> 
-                                                    <a href="{:U('goods/goods_view',array('id'=>$vo['id']))}"><button class="btn btn-info btn-sm" >查看</button>
-                                                    </a>
-                                                    <a href="{:U('goods/goods_info',array('id'=>$vo['id']))}"><button class="btn btn-primary btn-sm" >编辑</button>
+                                                    <!-- <a href="{:U('goods/tao_goods_view',array('id'=>$vo['id']))}"><button class="btn btn-info btn-sm" >查看</button>
+                                                    </a> -->
+                                                    <a href="{:U('goods/tao_goods_info',array('id'=>$vo['id']))}"><button class="btn btn-primary btn-sm" >编辑</button>
                                                     </a>
                                                     <button class="btn btn-danger btn-sm demo6" value="{$vo.id}">删除</button>
                                                 </td>
@@ -145,7 +142,7 @@
                 swal(
                     {
                         title: "您确定要『通过』此商品审核吗",
-                        text: "商品通过后仍可驳回",
+                        text: "商品通过后仍可下架",
                         type: "warning",
                         showCancelButton: true,
                         showRollButton: true,
@@ -162,21 +159,21 @@
                             var $span = $(event.currentTarget).parent().prev().find("span");
                             $.ajax({
                                 type: 'POST',
-                                url: 'course_handle',
+                                url: "{:U('Goods/tao_goods_handle')}",
                                 dataType: 'json',
                                 data: {id: id,act: 'ajax',status: 1},
                                 success: function(index){
-                                    $(event.currentTarget).replaceWith($(`<button class="btn btn-warning btn-sm demo5" value="${id}">驳回</button>`));
-                                    $span.replaceWith('<span class="label label-primary label2">进行中</span>');
-                                    swal("授理成功！", "您已经授理此提现。", "success");
+                                    $(event.currentTarget).replaceWith($(`<button class="btn btn-warning btn-sm demo5" value="${id}">下架</button>`));
+                                    $span.replaceWith('<span class="label label-primary label2">已上架</span>');
+                                    swal("审核成功！", "您已经审核此商品。", "success");
                                 },
                                 error:function(index) {
                                     console.log(index);
-                                    swal("授理失败！", "您的授理出现错误！", "error");
+                                    swal("审核失败！", "您的审核出现错误！", "error");
                                 },
                             });
                         } else {
-                            swal("已取消", "您取消了授理操作！", "error");
+                            swal("已取消", "您取消了审核操作！", "error");
                         }
                     }
                 );
@@ -185,12 +182,12 @@
             $('#exampleTableEvents').on('click', '.demo5', function (event) {
                 swal(
                     {
-                        title: "您确定要『驳回』此商品审核吗",
-                        text: "驳回后可重新审核该商品！",
+                        title: "您确定要『下架』此商品审核吗",
+                        text: "下架后可重新审核该商品！",
                         type: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "是的，我『驳回』！",
+                        confirmButtonText: "是的，我『下架』！",
                         cancelButtonText: "让我再考虑一下…",
                         closeOnConfirm: false,
                         closeOnCancel: false,
@@ -204,21 +201,21 @@
                                 type: 'POST',
                                 url: 'course_handle',
                                 dataType: 'json',
-                                data: {id: id,act: 'ajax',status: -1},
+                                data: {id: id,act: 'ajax',status: 2},
                                 success: function(index){
                                     // console.log(index);
                                     $(event.currentTarget).replaceWith($(`<button class="btn btn-warning btn-sm demo4" value="${id}">审核</button>`));
-                                    $span.replaceWith('<span class="label label-default label2">已驳回</span>');
-                                    swal("驳回成功！", "您已经驳回此提现。", "success");
+                                    $span.replaceWith('<span class="label label-default label2">已下架</span>');
+                                    swal("下架成功！", "您已经下架此商品。", "success");
                                 },
                                 error:function(index) {
                                     // console.log(data);
                                     console.log('data');
-                                    swal("驳回失败！", "您的驳回出现错误！", "error");
+                                    swal("下架失败！", "您的下架出现错误！", "error");
                                 },
                             });
                         } else {
-                            swal("已取消", "您取消了授理操作！", "error");
+                            swal("已取消", "您取消了审核操作！", "error");
                         }
                     }
                 );
@@ -227,7 +224,7 @@
             $('#exampleTableEvents').on('click', '.demo6', function (event) {
                 swal(
                     {
-                        title: "您确定要『删除』此商品提现吗",
+                        title: "您确定要『删除』此商品商品吗",
                         text: "删除后数据将无法恢复！",
                         type: "warning",
                         showCancelButton: true,

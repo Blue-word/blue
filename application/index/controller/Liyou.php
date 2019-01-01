@@ -7,10 +7,27 @@ class Liyou extends Common{
 
     public function index(){
         $position = input('post.position',1);
+        $goods_where['is_delete'] = 0;
+        $goods_list = M('goods')->where($goods_where)->order('id desc')->limit(3)->select();
+        if ($goods_list) {
+            foreach ($goods_list as $key => $value) {
+                $goods_list[$key]['category_name'] = M('category')->where('id',$value['category'])->getField('name');
+                $goods_list[$key]['add_time'] = date('Y-m-d H:i',$value['add_time']);
+                $goods_list[$key]['picture'] = explode(',', $value['picture']);
+                $category_name_first = $this->getcFirstCategory('category',3,$value['category']);
+                if (!$category_name_first['code']) {
+                    $goods_list[$key]['category_name_first'] = $category_name_first['info']['name'];
+                }else{
+                    $goods_list[$key]['category_name_first'] = '';
+                }
+            }
+        }
+        // dump($goods_list);
+        
         //活动
         $activity_where['status'] = array('in','1,2,3');
         $activity_where['is_delete'] = 0;
-        $activity_list = M('activity')->where($where)->order('id desc')->limit(3)->select();
+        $activity_list = M('activity')->where($activity_where)->order('id desc')->limit(3)->select();
         if ($activity_list) {
             foreach ($activity_list as $key => $value) {
                 $activity_list[$key]['start_time'] = date('Y-m-d H:i',$value['start_time']);
@@ -34,16 +51,55 @@ class Liyou extends Common{
                 $tao_list[$key]['picture'] = $this->imageChange($value['picture']);
             }
         }
+        $this->assign('goods_list',$goods_list);
         $this->assign('activity_list',$activity_list);
         $this->assign('tao_list',$tao_list);
         return $this->fetch();
     }
 
     public function u_paiyang(){
+        $category = input('post.category');
+        if ($category) {
+            $where['category'] = $category;
+        }
+        $where['is_delete'] = 0;
+        $list = M('goods')->where($where)->order('id desc')->select();
+        if ($list) {
+            foreach ($list as $key => $value) {
+                $list[$key]['category_name'] = M('category')->where('id',$value['category'])->getField('name');
+                $list[$key]['add_time'] = date('Y-m-d H:i',$value['add_time']);
+                $list[$key]['picture'] = explode(',', $value['picture']);
+                $category_name_first = $this->getcFirstCategory('category',3,$value['category']);
+                if (!$category_name_first['code']) {
+                    $list[$key]['category_name_first'] = $category_name_first['info']['name'];
+                }else{
+                    $list[$key]['category_name_first'] = '';
+                }
+            }
+        }
+        // dump($list);
+        // dump(123);
+        // dump(M('goods')->getLastsql());
+        $this->assign('list',$list);
         return $this->fetch();
     }
 
     public function u_xuanhui(){
+        $category = input('post.category');
+        if ($category) {
+            $where['category'] = $category;
+        }
+        $where['is_delete'] = 0;
+        $list = M('tao_goods')->where($where)->select();
+        if ($list) {
+            foreach ($list as $key => $value) {
+                $list[$key]['category_name'] = M('category')->where('id',$value['id'])->getField('name');
+                $list[$key]['add_time'] = date('Y-m-d H:i',$value['add_time']);
+            }
+        }
+        
+        // dump($category_first);
+        $this->assign('list',$list);
         return $this->fetch();
     }
 
@@ -75,7 +131,7 @@ class Liyou extends Common{
             $where['category'] = $category;
         }
         $where['is_delete'] = 0;
-        $list = M('goods')->where($where)->select();
+        $list = M('goods')->where($where)->order('id desc')->select();
         if ($list) {
             foreach ($list as $key => $value) {
                 $list[$key]['category_name'] = M('category')->where('id',$value['category'])->getField('name');
@@ -90,6 +146,8 @@ class Liyou extends Common{
             }
         }
         // dump($list);
+        // dump(123);
+        // dump(M('goods')->getLastsql());
         $this->assign('list',$list);
         return $this->fetch();
     }
@@ -124,7 +182,7 @@ class Liyou extends Common{
                 $info['category_name_first'] = '';
             }
         }
-        dump($info);
+        // dump($info);
         $this->assign('info',$info);
         return $this->fetch();
     }

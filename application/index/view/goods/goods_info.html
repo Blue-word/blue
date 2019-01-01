@@ -42,9 +42,9 @@
             <div class="col-sm-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>商品信息编辑&nbsp;&nbsp;&nbsp;<small>包括定位和课程信息</small></h5>
+                        <h5>商品信息编辑&nbsp;&nbsp;&nbsp;<small>包括图片和名称信息</small></h5>
                         <div class="ibox-tools">
-                            <a href="{:U('pacificocean/course_list')}">
+                            <a href="{:U('goods/goods_list')}">
                                 <i class="fa fa-reply-all" ></i>
                             </a>
                             <a class="collapse-link">
@@ -79,7 +79,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">点位选择</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control selectpicker" data-live-search="true" multiple>
+                                    <select class="form-control selectpicker" data-live-search="true" name="area[]" required="" aria-required="true" multiple>
                                         <foreach name="area" item="vo">
                                             <optgroup label="{$vo.name}">
                                                 <foreach name="vo.point" item="fo">
@@ -146,6 +146,9 @@
                             <div id="hidden_val">
                                 <foreach name="pic_list" item="albumFo">
                                     <input type="hidden" name="picture[]" value="{$albumFo}"/>
+                                </foreach>
+                                <foreach name="cover_list" item="albumFo">
+                                    <input type="hidden" name="cover_pic[]" value="{$albumFo}"/>
                                 </foreach>
                             </div>
                             <div class="form-group">
@@ -303,22 +306,22 @@
             // overwriteInitial: false, //不覆盖已存在的图片
             //deleteExtraData,  //删除图片时额外传入的参数,默认{}
             initialPreviewAsData: true,
-            // initialPreview: [       //初始化展示
-            //     <foreach name='pic_list' item='picInfo'>
-            //     "{$picInfo}",
-            //     </foreach>
-            // ],
-            // initialPreviewConfig: [        //预览图配置
-            // <foreach name='pic_list' item='picInfo'>
-            // { 
-            //     width: '213.33px', 
-            //     // url: '__APP__/index/Uploadify/imageDelupload', // server delete action 
-            //     showUpload:false, 
-            //     extra: {filename: "{$picInfo}"},
-            //     // previewAsData:false,
-            //     key:"{$picInfo}",
-            // },
-            // </foreach>
+            initialPreview: [       //初始化展示
+                <foreach name='pic_list' item='picInfo'>
+                "{$picInfo}",
+                </foreach>
+            ],
+            initialPreviewConfig: [        //预览图配置
+            <foreach name='pic_list' item='picInfo'>
+            { 
+                width: '213.33px', 
+                // url: '__APP__/index/Uploadify/imageDelupload', // server delete action 
+                showUpload:false, 
+                extra: {filename: "{$picInfo}"},
+                // previewAsData:false,
+                key:"{$picInfo}",
+            },
+            </foreach>
             ],
         }).on("fileuploaded",function(event,data,previewId,index){         //异步上传上传回调函数
                 var num = data.response['initialPreviewConfig'].length;
@@ -349,22 +352,22 @@
             //deleteExtraData,  //删除图片时额外传入的参数,默认{}
             dropZoneEnabled: false,     //是否显示拖拽区域
             initialPreviewAsData: true,
-            // initialPreview: [       //初始化展示
-            //     <foreach name='pic_list' item='picInfo'>
-            //     "{$picInfo}",
-            //     </foreach>
-            // ],
-            // initialPreviewConfig: [        //预览图配置
-            // <foreach name='pic_list' item='picInfo'>
-            // { 
-            //     width: '213.33px', 
-            //     // url: '__APP__/index/Uploadify/imageDelupload', // server delete action 
-            //     showUpload:false, 
-            //     extra: {filename: "{$picInfo}"},
-            //     // previewAsData:false,
-            //     key:"{$picInfo}",
-            // },
-            // </foreach>
+            initialPreview: [       //初始化展示
+                <foreach name='cover_list' item='picInfo'>
+                "{$picInfo}",
+                </foreach>
+            ],
+            initialPreviewConfig: [        //预览图配置
+            <foreach name='cover_list' item='picInfo'>
+            { 
+                width: '213.33px', 
+                // url: '__APP__/index/Uploadify/imageDelupload', // server delete action 
+                showUpload:false, 
+                extra: {filename: "{$picInfo}"},
+                // previewAsData:false,
+                key:"{$picInfo}",
+            },
+            </foreach>
             ],
         }).on("fileuploaded",function(event,data,previewId,index){         //异步上传上传回调函数
                 console.log(event)

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>角色列表</title>
+    <title>派样商品列表</title>
     <link rel="shortcut icon" href="favicon.ico"> <link href="__PUBLIC__/static/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
     <link href="__PUBLIC__/static/css/font-awesome.css?v=4.4.0" rel="stylesheet">
     <link href="__PUBLIC__/static/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
@@ -26,7 +26,7 @@
                     <div class="col-sm-12">
                         <!-- Example Events -->
                         <div class="example-wrap">
-                            <h4 class="example-title">新人培训课程列表</h4>
+                            <h4 class="example-title">派样商品列表</h4>
                             <div class="example">
                                 <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
                                     <a href="{:U('goods/goods_info')}">
@@ -63,10 +63,12 @@
                                                     <div>{$vo.id}</div>
                                                 </td>
                                                 <td align="center" class="">
-                                                    <div>{$vo.title}</div>
+                                                    <div>
+                                                        <a href="{:U('goods/goods_info',array('id'=>$vo['id']))}" style="color: #337ab7">{$vo.title}</a>
+                                                    </div>
                                                 </td>
                                                 <td align="center" class="">
-                                                    <div>{$vo.cate}</div>
+                                                    <div>{$vo.category_name}</div>
                                                 </td>
                                                 <!-- <td align="center" class="">
                                                     <div>{$vo.place}</div>
@@ -82,7 +84,7 @@
                                                     </div>
                                                 </td> -->
                                                 <td align="center" class="">
-                                                    <div>{$vo.time}</div>
+                                                    <div>{$vo.add_time}</div>
                                                 </td>
                                                 <!-- <td align="center" class="">
                                                     <div>{$vo.admin_name} / {$vo.audit_name}</div>
@@ -98,17 +100,17 @@
                                                     <elseif condition="$vo.status eq 2">
                                                         <span class="label label-default label3">已拒绝</span>
                                                     <elseif condition="$vo.status eq -1">
-                                                        <span class="label label-default label4">已驳回</span>
+                                                        <span class="label label-default label4">已下架</span>
                                                     </if>
                                                 </td>
                                                 <td align="center" class="">
                                                     <if condition="($vo.status eq 0) OR ($vo.status eq -1)">
                                                         <button class="btn btn-warning btn-sm demo4" value="{$vo.id}">审核</button>
                                                     <elseif condition="$vo.status eq 1">
-                                                        <button class="btn btn-warning btn-sm demo5" value="{$vo.id}">驳回</button>
+                                                        <button class="btn btn-warning btn-sm demo5" value="{$vo.id}">下架</button>
                                                     </if> 
-                                                    <a href="{:U('goods/goods_view',array('id'=>$vo['id']))}"><button class="btn btn-info btn-sm" >查看</button>
-                                                    </a>
+                                                    <!-- <a href="{:U('goods/goods_view',array('id'=>$vo['id']))}"><button class="btn btn-info btn-sm" >查看</button>
+                                                    </a> -->
                                                     <a href="{:U('goods/goods_info',array('id'=>$vo['id']))}"><button class="btn btn-primary btn-sm" >编辑</button>
                                                     </a>
                                                     <button class="btn btn-danger btn-sm demo6" value="{$vo.id}">删除</button>
@@ -151,8 +153,8 @@
             $('#exampleTableEvents').on('click', '.demo4', function (event) {
                 swal(
                     {
-                        title: "您确定要『通过』此课程审核吗",
-                        text: "课程通过后仍可驳回",
+                        title: "您确定要『通过』此商品审核吗",
+                        text: "商品通过后仍可下架",
                         type: "warning",
                         showCancelButton: true,
                         showRollButton: true,
@@ -169,21 +171,21 @@
                             var $span = $(event.currentTarget).parent().prev().find("span");
                             $.ajax({
                                 type: 'POST',
-                                url: 'course_handle',
+                                url: "{:U('Goods/goods_handle')}",
                                 dataType: 'json',
                                 data: {id: id,act: 'ajax',status: 1},
                                 success: function(index){
-                                    $(event.currentTarget).replaceWith($(`<button class="btn btn-warning btn-sm demo5" value="${id}">驳回</button>`));
-                                    $span.replaceWith('<span class="label label-primary label2">进行中</span>');
-                                    swal("授理成功！", "您已经授理此提现。", "success");
+                                    $(event.currentTarget).replaceWith($(`<button class="btn btn-warning btn-sm demo5" value="${id}">下架</button>`));
+                                    $span.replaceWith('<span class="label label-primary label2">已上架</span>');
+                                    swal("审核成功！", "您已经审核此提现。", "success");
                                 },
                                 error:function(index) {
                                     console.log(index);
-                                    swal("授理失败！", "您的授理出现错误！", "error");
+                                    swal("审核失败！", "您的审核出现错误！", "error");
                                 },
                             });
                         } else {
-                            swal("已取消", "您取消了授理操作！", "error");
+                            swal("已取消", "您取消了审核操作！", "error");
                         }
                     }
                 );
@@ -192,12 +194,12 @@
             $('#exampleTableEvents').on('click', '.demo5', function (event) {
                 swal(
                     {
-                        title: "您确定要『驳回』此课程审核吗",
-                        text: "驳回后可重新审核该课程！",
+                        title: "您确定要『下架』此商品审核吗",
+                        text: "下架后可重新审核该商品！",
                         type: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "是的，我『驳回』！",
+                        confirmButtonText: "是的，我『下架』！",
                         cancelButtonText: "让我再考虑一下…",
                         closeOnConfirm: false,
                         closeOnCancel: false,
@@ -209,23 +211,23 @@
                             var $span = $(event.currentTarget).parent().prev().find("span");
                             $.ajax({
                                 type: 'POST',
-                                url: 'course_handle',
+                                url: "{:U('Goods/goods_handle')}",
                                 dataType: 'json',
                                 data: {id: id,act: 'ajax',status: -1},
                                 success: function(index){
                                     // console.log(index);
                                     $(event.currentTarget).replaceWith($(`<button class="btn btn-warning btn-sm demo4" value="${id}">审核</button>`));
-                                    $span.replaceWith('<span class="label label-default label2">已驳回</span>');
-                                    swal("驳回成功！", "您已经驳回此提现。", "success");
+                                    $span.replaceWith('<span class="label label-default label2">已下架</span>');
+                                    swal("下架成功！", "您已经下架此提现。", "success");
                                 },
                                 error:function(index) {
                                     // console.log(data);
                                     console.log('data');
-                                    swal("驳回失败！", "您的驳回出现错误！", "error");
+                                    swal("下架失败！", "您的下架出现错误！", "error");
                                 },
                             });
                         } else {
-                            swal("已取消", "您取消了授理操作！", "error");
+                            swal("已取消", "您取消了审核操作！", "error");
                         }
                     }
                 );
@@ -234,7 +236,7 @@
             $('#exampleTableEvents').on('click', '.demo6', function (event) {
                 swal(
                     {
-                        title: "您确定要『删除』此课程提现吗",
+                        title: "您确定要『删除』此商品吗",
                         text: "删除后数据将无法恢复！",
                         type: "warning",
                         showCancelButton: true,
@@ -250,13 +252,13 @@
                             // console.log(id);
                             $.ajax({
                                 type: 'POST',
-                                url: 'course_handle',
+                                url: "{:U('Goods/goods_handle')}",
                                 dataType: 'json',
                                 data: {id: id,act: 'del'},
                                 success: function(index){
                                     // console.log(index);
                                     $(event.currentTarget).parent().parent().remove();
-                                    swal("删除成功！", "您已经删除此课程。", "success");
+                                    swal("删除成功！", "您已经删除此商品。", "success");
                                 },
                                 error:function(index) {
                                     console.log(index);

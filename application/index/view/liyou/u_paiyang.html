@@ -172,78 +172,47 @@
   <div class="am-g am-g-fixed blog-fixed">
     <div class="am-u-md-8 am-u-sm-12">
       <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
-            <!-- <span style="color: red;">正在派送</span> -->
-            <!-- <h2 class="blog-text-center blog-title"><span>正在派送</span></h2> -->
-            <h3 class="blog-title" style="margin-top: 1rem;">正在派送
-              <span style="float: right;font-size: 14px;"> <a href="{:U('liyou/u_paiyang_list')}" class="blog-color">@查看更多>></a></span>
-            </h3>
-            <!-- <span style="float: right;"> <a href="" class="blog-color">@查看更多>></a></span> -->
-            <!-- <p>我们一直在坚持着，不是为了改变这个世界，而是希望不被这个世界所改变。</p> -->
-            
-        </div>
-
+        <h3 class="blog-title" style="margin-top: 1rem;">正在派送
+          <span style="float: right;font-size: 14px;"> <a href="{:U('liyou/u_paiyang_list')}" class="blog-color">@查看更多>></a></span>
+        </h3>
+      </div>
+      <foreach name="list" item="vo">
         <article class="am-g blog-entry-article">
-          <h1 style="text-align: center;">222我本楚狂人，凤歌笑孔丘</h1>
+          <h1 style="text-align: center;">{$vo.title}</h1>
             <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
-                <img src="__PUBLIC__/static/assets/i/f10.jpg" alt="" class="am-img-thumbnail am-radius">
+                <img src="{$vo.cover_pic}" alt="" class="am-img-thumbnail am-radius">
             </div>
             <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
-                <span><a href="" class="blog-color">价格 &nbsp;</a></span>
-                <span> 地点@南京 &nbsp;</span>
-                <span>time:2015/10/9</span>
-                <!-- <h1><a href="">我本楚狂人，凤歌笑孔丘</a></h1> -->
-                <p>简述：我们一直在坚持着，不是为了改变这个世界，而是希望不被这个世界所改变。
-                </p>
+              <!-- <i class="am-icon-heart active" style="font-size: 18px;"> {$info.love_num}</i> <i class="am-icon-cny active" style="font-size: 18px;"> {$info.price}</i> -->
+                <span><a href="" class="blog-color">￥{$vo.price} &nbsp;</a></span>
+                <span> {$vo.title}地点@南京 &nbsp;</span>
+                <span>{$vo.add_time}</span>
+                <p>{$vo.content}</p>
                 <p><a href="" class="blog-continue">continue reading</a></p>
             </div>
         </article>
+      </foreach>
+      <article class="am-g blog-entry-article">
+        <h1 style="text-align: center;">我本楚狂人，凤歌笑孔丘</h1>
+          <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
+              <img src="__PUBLIC__/static/assets/i/f10.jpg" alt="" class="am-img-thumbnail am-radius">
+          </div>
+          <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
+              <span><a href="" class="blog-color">价格 &nbsp;</a></span>
+              <span> 地点@南京 &nbsp;</span>
+              <span>time:2015/10/9</span>
+              <p>简述：我们一直在坚持着，不是为了改变这个世界，而是希望不被这个世界所改变。
+              </p>
+              <p><a href="" class="blog-continue">continue reading</a></p>
+          </div>
+      </article>
         
         <!-- <ul class="am-pagination">
         <li class="am-pagination-prev"><a href="">&laquo; Prev</a></li>
         <li class="am-pagination-next"><a href="">Next &raquo;</a></li>
     </ul> -->
     </div>
-    <div class="am-u-md-4 am-u-sm-12 blog-sidebar">
-        <div class="blog-sidebar-widget blog-bor">
-            <h2 class="blog-text-center blog-title">
-              <span style="text-align: center;">U选活动</span>
-              
-            </h2>
-            <span style="float: right;font-size: 14px;padding-top: 6px;padding-right: 0px;"> <a href="" class="blog-color">@查看更多>></a></span>
-            <img src="__PUBLIC__/static/assets/i/f16.jpeg" alt="about me" class="am-img-thumbnail am-radius" >
-            <p>简述：我不想成为一个庸俗的人。十年百年后，当我们死去，质疑我们的人同样死去，后人看到的是裹足不前、原地打转的你，还是一直奔跑、走到远方的我？</p>
-        </div>
-        <div class="blog-sidebar-widget blog-bor">
-            <h2 class="blog-text-center blog-title"><span>Contact ME</span></h2>
-            <p>
-                <a href=""><span class="am-icon-qq am-icon-fw am-primary blog-icon"></span></a>
-                <a href=""><span class="am-icon-github am-icon-fw blog-icon"></span></a>
-                <a href=""><span class="am-icon-weibo am-icon-fw blog-icon"></span></a>
-                <a href=""><span class="am-icon-reddit am-icon-fw blog-icon"></span></a>
-                <a href=""><span class="am-icon-weixin am-icon-fw blog-icon"></span></a>
-            </p>
-        </div>
-        <div class="blog-clear-margin blog-sidebar-widget blog-bor am-g ">
-            <h2 class="blog-title"><span>TAG cloud</span></h2>
-            <div class="am-u-sm-12 blog-clear-padding">
-            <a href="" class="blog-tag">amaze</a>
-            <a href="" class="blog-tag">妹纸 UI</a>
-            <a href="" class="blog-tag">HTML5</a>
-            <a href="" class="blog-tag">这是标签</a>
-            <a href="" class="blog-tag">Impossible</a>
-            <a href="" class="blog-tag">开源前端框架</a>
-            </div>
-        </div>
-        <div class="blog-sidebar-widget blog-bor">
-            <h2 class="blog-title"><span>么么哒</span></h2>
-            <ul class="am-list">
-                <li><a href="#">每个人都有一个死角， 自己走不出来，别人也闯不进去。</a></li>
-                <li><a href="#">我把最深沉的秘密放在那里。</a></li>
-                <li><a href="#">你不懂我，我不怪你。</a></li>
-                <li><a href="#">每个人都有一道伤口， 或深或浅，盖上布，以为不存在。</a></li>
-            </ul>
-        </div>
-    </div>
+
   </div>
 </div>
 <!-- content srart -->

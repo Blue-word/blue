@@ -44,7 +44,7 @@ class Goods extends Common{
         // $where['del_status'] = 0;
         // $list = M('new_course')->where($where)->order('id desc')->select();
         if ($list) {
-            foreach ($list as $k => $v) {
+            foreach ($list as $key => $value) {
                 // $list[$k]['admin_name'] = M('admin')->where('uid',$v['uid'])->getField('name');
                 // $audit_name = M('admin')->where('uid',$v['audit_uid'])->getField('name');
                 // if (!($audit_name)) {
@@ -54,7 +54,8 @@ class Goods extends Common{
                 //     $list[$k]['course_cate'] = '未设置';
                 // }
                 // $list[$k]['audit_name'] = $audit_name;
-                $list[$k]['time'] = date('Y-m-d H:i',$v['time']);
+                $list[$key]['category_name'] = M('category')->where('id',$value['id'])->getField('name');
+                $list[$key]['add_time'] = date('Y-m-d H:i',$value['add_time']);
             }
         }
 
@@ -70,6 +71,7 @@ class Goods extends Common{
             // $info['start_time'] = date('Y-m-d H:i:s',$info['start_time']);
             // $info['end_time'] = date('Y-m-d H:i:s',$info['end_time']);
             $picture = explode(',',$info['picture']);
+            $cover_pic = explode(',',$info['cover_pic']);
             $this->assign('info',$info);
         }
         $category_where['level'] = 1;
@@ -93,6 +95,7 @@ class Goods extends Common{
         // dump($area);
         $this->assign('act',$act);
         $this->assign('pic_list',$picture);
+        $this->assign('cover_list',$cover_pic);
         $this->assign('area',$area);
         $this->assign('category_first',$category_first);
         return $this->fetch();
@@ -109,32 +112,39 @@ class Goods extends Common{
             // $data['start_time'] = strtotime($data['start_time']);
             // $data['end_time'] = strtotime($data['end_time']);
             // $data['uid']  = Session::get('uid');
-            $data['picture'] = implode(',',$data['picture']);
-            $data['cover_pic'] = implode(',',$data['cover_pic']);
+            if ($data['picture']) {
+                $data['picture'] = implode(',',$data['picture']);
+            }
+            if ($data['cover_pic']) {
+                $data['cover_pic'] = implode(',',$data['cover_pic']);
+            }
+            $data['area'] = implode(',',$data['area']);
             // dump($data);
             $res = $model->allowField(true)->save($data);
         }
         
-        // if($data['act'] == 'edit'){
-        //     $data['time'] = time();
-        //     $data['start_time'] = strtotime($data['start_time']);
-        //     $data['end_time'] = strtotime($data['end_time']);
-        //     $data['picture'] = implode(',',$data['picture']);
-        //     // dump($data);
-        //     $res = $model->allowField(true)->save($data,['id' => $data['id']]);
-        // }
+        if($data['act'] == 'edit'){
+            $data['time'] = time();
+            // $data['start_time'] = strtotime($data['start_time']);
+            // $data['end_time'] = strtotime($data['end_time']);
+            $data['picture'] = implode(',',$data['picture']);
+            dump($data);
+            $res = $model->allowField(true)->save($data,['id' => $data['id']]);
+            dump($model->getLastsql());
+            dump($res);
+        }
         
         // if($data['act'] == 'del'){
         //     $res = D('new_course')->where('id', $data['id'])->save(['del_status'=>1]);
         //     exit(json_encode($data));
         // }
 
-        // if($data['act'] == 'audit' || $data['act'] == 'ajax'){
-        //     $audit_uid = Session::get('uid');
-        //     $res = M('NewCourse')->where('id', $data['id'])->save(['status'=>$data['status'],'audit_uid'=>$audit_uid]);
-        //     // exit(json_encode($data));
-        //     // dump($res);
-        // }
+        if($data['act'] == 'audit' || $data['act'] == 'ajax'){
+            // $audit_uid = Session::get('uid');
+            $res = $model->where('id', $data['id'])->save(['status'=>$data['status']]);
+            exit(json_encode($res));
+            // dump($res);
+        }
         
         // if($res){
         //     $this->success("操作成功",U('index/pacificocean/course_list'));
@@ -433,7 +443,7 @@ class Goods extends Common{
     public function tao_goods_info(){
         $id = input('id');
         if($id){
-            $info = M('goods')->where('id',$id)->find();
+            $info = M('tao_goods')->where('id',$id)->find();
             // $info['start_time'] = date('Y-m-d H:i:s',$info['start_time']);
             // $info['end_time'] = date('Y-m-d H:i:s',$info['end_time']);
             $picture = explode(',',$info['picture']);
@@ -469,8 +479,10 @@ class Goods extends Common{
         
         if($data['act'] == 'edit'){
             $data['picture'] = implode(',',$data['picture']);
-            // dump($data);
+            dump($data);
             $res = $model->allowField(true)->save($data,['id' => $data['id']]);
+            dump($res);
+            dump($model->getLastsql());
         }
         
         // if($data['act'] == 'del'){
@@ -478,12 +490,13 @@ class Goods extends Common{
         //     exit(json_encode($data));
         // }
 
-        // if($data['act'] == 'audit' || $data['act'] == 'ajax'){
-        //     $audit_uid = Session::get('uid');
-        //     $res = M('NewCourse')->where('id', $data['id'])->save(['status'=>$data['status'],'audit_uid'=>$audit_uid]);
-        //     // exit(json_encode($data));
-        //     // dump($res);
-        // }
+        if($data['act'] == 'audit' || $data['act'] == 'ajax'){
+            // $audit_uid = Session::get('uid');
+            $res = $model->where('id', $data['id'])->save(['status'=>$data['status']]);
+            // dump($model->getLastsql());
+            exit(json_encode($res));
+            // dump($res);
+        }
         
         // if($res){
         //     $this->success("操作成功",U('index/pacificocean/course_list'));
