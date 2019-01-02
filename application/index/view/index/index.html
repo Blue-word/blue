@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="renderer" content="webkit">
 
-    <title>太平人寿后台管理系统</title>
+    <title>历优U选后台管理系统</title>
 
     <!--[if lt IE 9]>
     <meta http-equiv="refresh" content="0;ie.html" />
@@ -65,12 +65,12 @@
                             <li>
                                 <a class="J_menuItem" href="{:U('index/index_v1')}" data-index="0">主页</a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a class="J_menuItem" href="{:U('test/test')}" data-index="0">Excel导入</a>
                             </li>
                             <li>
                                 <a class="J_menuItem" href="{:U('test/test1')}" data-index="0">Excel导出</a>
-                            </li>
+                            </li> -->
                             <!-- <li>
                                 <a class="J_menuItem" href="{:U('index/index_v2')}">主页示例二</a>
                             </li>
@@ -136,9 +136,9 @@
                         <ul class="nav nav-second-level">
                             <!-- <li><a class="J_menuItem" href="form_basic.html">基本表单</a> -->
                             </li>
-                            <li><a class="J_menuItem" href="{:U('goods/goods_list')}">商品列表</a>
+                            <li><a class="J_menuItem" href="{:U('goods/goods_list')}">派样商品</a>
                             </li>
-                            <li><a class="J_menuItem" href="{:U('goods/new_list')}">新人列表</a>
+                            <li><a class="J_menuItem" href="{:U('goods/area_list')}">机器点位</a>
                             </li>
                             <li><a class="J_menuItem" href="{:U('goods/category_list')}">商品分类</a>
                             </li>
@@ -181,12 +181,19 @@
                         </ul>
                     </li>
                     <li>
+                        <a href="#"><i class="fa fa-picture-o"></i> <span class="nav-label">选惠商品</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a class="J_menuItem" href="{:U('pacificocean/new_add_list')}">商品列表</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- <li>
                         <a href="#"><i class="fa fa-picture-o"></i> <span class="nav-label">创说会管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li><a class="J_menuItem" href="{:U('pacificocean/new_add_list')}">创说会列表</a>
                             </li>
                         </ul>
-                    </li>
+                    </li> -->
                     <li>
                         <a href="#"><i class="fa fa fa-bar-chart-o"></i> <span class="nav-label">报表管理</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">

@@ -72,7 +72,10 @@ class Goods extends Common{
             // $info['end_time'] = date('Y-m-d H:i:s',$info['end_time']);
             $picture = explode(',',$info['picture']);
             $cover_pic = explode(',',$info['cover_pic']);
+            //分类选中
+            $category_info = $this->getCategoryInfo($info['category']);
             $this->assign('info',$info);
+            $this->assign('category_info',$category_info);
         }
         $category_where['level'] = 1;
         $category_where['is_delete'] = 0;
@@ -527,7 +530,6 @@ class Goods extends Common{
         $category_first = M('category')->where($category_where)->select();
         $this->ajaxReturn($category_first);
     }
-
     /**
      * 
      *
@@ -620,6 +622,35 @@ class Goods extends Common{
             $this->assign('info',$info);
         }
         return $this->fetch();
+    }
+    /**
+     * 获取分类信息
+     *
+     * @author blue 2018-12-17
+     * @param  string  $model 模型
+     * @param  integer $type  类型
+     * @param  string  $id    分类id
+     * @return [type]         [description]
+     */
+    public function getCategoryInfo($category_id=1){
+        $return = array();
+        $res_1 = $res_2 = $res_3 = array();
+        $res_1 = M($model)->where('id='.$category_id)->find();
+        if ($res_1['level'] == 1) {
+            $return['first'] = $res_1;
+        }elseif ($res_1['level'] ==  2) {
+            $res_2 = M($model)->where('id='.$res_1['pid'])->find();
+        }elseif ($res_1['level'] ==  3) {
+            $res_2 = M($model)->where('id='.$res_1['pid'])->find();
+            if ($pid_res == 0) {
+            }else{
+                $res_3 = M($model)->where('id='.$res_2['pid'])->find();
+            }
+        }
+        $return['first'] = $res_1;
+        $return['second'] = $res_2;
+        $return['third'] = $res_3;
+        return $return;
     }
 
     
