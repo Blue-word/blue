@@ -6,7 +6,7 @@
   <meta name="description" content="">
   <meta name="keywords" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>BLOG index with sidebar & slider  | Amaze UI Examples</title>
+  <title>历优U选</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="Cache-Control" content="no-siteapp"/>
   <link rel="icon" type="image/png" href="__PUBLIC__/static/assets/i/favicon.png">
@@ -47,8 +47,8 @@
 <header class="am-g am-g-fixed blog-fixed blog-text-center blog-header">
 	<!-- <h2 class="am-hide-sm-only">HTML5</h2> -->
     <div class="am-u-sm-8 am-u-sm-centered">
-        <!-- 历优U选 -->
-        <img width="200" src="http://s.amazeui.org/media/i/brand/amazeui-b.png" alt="Amaze UI Logo"/>
+        <h2 class="am-show-lg-down" style="font-size: 26px">历优U选</h2>
+        <!-- <img width="200" src="http://s.amazeui.org/media/i/brand/amazeui-b.png" alt="Amaze UI Logo"/> -->
         <!-- <h2 class="am-hide-sm-only">中国首个开源 HTML5 跨屏前端框架</h2> -->
     </div>
 </header>
@@ -59,9 +59,9 @@
 
   <div class="am-collapse am-topbar-collapse" id="blog-collapse">
     <ul class="am-nav am-nav-pills am-topbar-nav">
-      <li class="am-active"><a href="lw-index.html">南京</a></li>
-      <li class="am-active"><a href="lw-index.html">苏州</a></li>
-      <li class="am-active"><a href="lw-index.html">合肥</a></li>
+      <li class="am-active" onclick="position_change('1')"><a>南京</a></li>
+      <li class="am-active" onclick="position_change('2')"><a>苏州</a></li>
+      <li class="am-active" onclick="position_change('3')"><a>合肥</a></li>
       <!-- <li class="am-active"><a href="lw-index.html">首页</a></li>
       <li class="am-active"><a href="lw-index.html">首页</a></li>
       <li class="am-dropdown" data-am-dropdown>
@@ -162,7 +162,7 @@
   <li><a href="#u-xuanhui" onclick="u_chang('u-xuanhui')">U选惠</a></li>
 </ul> -->
 <ul class="am-nav am-nav-tabs am-nav-justify">
-  <li class="am-active"><a href="#u-remen">热门</a></li>
+  <li class="am-active"><a href="{:U('liyou/index')}">热门</a></li>
   <li><a href="{:U('liyou/u_paiyang')}">U选派样</a></li>
   <li><a href="{:U('liyou/u_xuanhui')}">U选惠</a></li>
 </ul>
@@ -281,6 +281,25 @@
     }
     console.log(13);
   }
+  function position_change(type) {
+    console.log(type);
+    $.ajax({    
+      type:'post',
+      url:"savePositionSession",    
+      data: {position: type},
+      cache:false,
+      dataType:'json',    
+      success:function(res){  
+          console.log(res)
+          //刷新界面
+          location.reload();                            
+      },
+      error:function(){ 
+          alert("地区切换失败")
+      }
+    });
+  }
+
 </script>
 <!--[if (gte IE 9)|!(IE)]><!-->
 <script src="__PUBLIC__/static/assets/js/jquery.min.js"></script>

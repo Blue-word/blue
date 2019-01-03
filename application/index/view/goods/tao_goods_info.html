@@ -74,8 +74,8 @@
                                 <label class="col-sm-2 control-label">商品类别</label>
                                 <div class="col-sm-2">
                                     <select  class="form-control selectpicker show-tick reset" id="select-first" name="firstValue" data-url="{:U('Goods/getSonCategory')}" data-live-search="true"  data-size="6">
+                                        <option value="">请选择分类</option>
                                         <foreach name="category_first" item="vo">
-                                            <option value="">请选择分类</option>
                                             <option value="{$vo.id}">{$vo.name}</option>
                                         </foreach>
                                     </select>
@@ -171,6 +171,8 @@
                     success : function (res) {
                         console.log(res)
                         //遍历回传的数据添加到二级select
+                        var option = '<option value="">请选择分类</option>';
+                        $("#select-second").append(option);
                         $.each(res, function(key, secondData) {
                             var option = '<option value="'+secondData.id+'">'+secondData.name+'</option>';
                             console.log(option)
@@ -188,7 +190,6 @@
                         // body...
                     }
                 });
-                
             });
             $("#select-second").change(function(){
                 //清空三级slect的旧选项                
@@ -210,6 +211,8 @@
                     dataType:'json',    
                     success:function(res){                              
                         //遍历回传的数据添加到二级select
+                        var option = '<option value="">请选择分类</option>';
+                        $("#select-third").append(option);
                         $.each(res, function(key, secondData) {
                             var option = '<option value="'+secondData.id+'">'+secondData.name+'</option>';
                             console.log(option)
@@ -225,8 +228,45 @@
                         alert("请求失败")
                     }
                 });
-            });  
-             
+            });
+            //默认选中 category_info
+            var act = "{$act}";
+            if (act == 'edit') {
+                var category_id = "{$info.category}";
+                console.log(category_id)  
+                $.ajax({    
+                    type:'get',        
+                    url:"{U:('goods/getCategoryInfo')}",    
+                    data: {category_id: category_id,type: 2},    
+                    cache:false,    
+                    dataType:'json',    
+                    success:function(res){  
+                        console.log(res)                              
+                        //append前清除原有的option
+                        $("#select-first").children().first().remove();
+                        $("#select-second").empty();
+                        $("#select-third").empty();
+                        var first_option = '<option value="'+res.first.id+'">'+res.first.name+'</option>';
+                        var second_option = '<option value="'+res.second.id+'">'+res.second.name+'</option>';
+                        var third_option = '<option value="'+res.third.id+'">'+res.third.name+'</option>';
+                        //添加元素
+                        $("#select-first").append(first_option);
+                        $("#select-second").append(second_option);
+                        $("#select-third").append(third_option);
+                        //bootstap-select控件:需刷新对应select                           
+                        $("#select-first").selectpicker('refresh');
+                        $("#select-second").selectpicker('refresh');
+                        $("#select-third").selectpicker('refresh');
+                         //三级select显示出来
+                        $("#box-select-first").fadeIn("slow");                                              
+                        $("#box-select-second").fadeIn("slow");                                               
+                        $("#box-select-third").fadeIn("slow");                                               
+                    },
+                    error:function(){ 
+                        alert("请求失败")
+                    }
+                });
+            }
         });
         // $(document).ready(function () {
         //     $('.i-checks').iCheck({

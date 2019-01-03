@@ -73,7 +73,7 @@ class Goods extends Common{
             $picture = explode(',',$info['picture']);
             $cover_pic = explode(',',$info['cover_pic']);
             //分类选中
-            // $category_info = $this->getCategoryInfo($info['category']);
+            $category_info = $this->getCategoryInfo($info['category']);
             $this->assign('info',$info);
             $this->assign('category_info',$category_info);
         }
@@ -94,7 +94,7 @@ class Goods extends Common{
             }
             // dump($point_info);
         }
-        // dump($area);
+        // dump($category_info);
         // dump($area);
         $this->assign('act',$act);
         $this->assign('pic_list',$picture);
@@ -449,8 +449,11 @@ class Goods extends Common{
             $info = M('tao_goods')->where('id',$id)->find();
             // $info['start_time'] = date('Y-m-d H:i:s',$info['start_time']);
             // $info['end_time'] = date('Y-m-d H:i:s',$info['end_time']);
+            //分类选中
+            $category_info = $this->getCategoryInfo($info['category']);
             $picture = explode(',',$info['picture']);
             $this->assign('info',$info);
+            $this->assign('category_info',$category_info);
         }
         $category_where['level'] = 1;
         $category_where['is_delete'] = 0;
@@ -632,26 +635,39 @@ class Goods extends Common{
      * @param  string  $id    分类id
      * @return [type]         [description]
      */
-    // public function getCategoryInfo($category_id=1){
-    //     $return = array();
-    //     $res_1 = $res_2 = $res_3 = array();
-    //     $res_1 = M($model)->where('id='.$category_id)->find();
-    //     if ($res_1['level'] == 1) {
-    //         $return['first'] = $res_1;
-    //     }elseif ($res_1['level'] ==  2) {
-    //         $res_2 = M($model)->where('id='.$res_1['pid'])->find();
-    //     }elseif ($res_1['level'] ==  3) {
-    //         $res_2 = M($model)->where('id='.$res_1['pid'])->find();
-    //         if ($pid_res == 0) {
-    //         }else{
-    //             $res_3 = M($model)->where('id='.$res_2['pid'])->find();
-    //         }
-    //     }
-    //     $return['first'] = $res_1;
-    //     $return['second'] = $res_2;
-    //     $return['third'] = $res_3;
-    //     return $return;
-    // }
+    public function getCategoryInfo($category_id=0,$type=1){
+        $type = I('get.type');
+        if ($type == 2) {   //ajax
+            $category_id = I('gey.category_id',0);
+        }else{
+            $type = 1;
+        }
+        // dump($type);
+        // dump($category_id);
+        $return = array();
+        $res_1 = $res_2 = $res_3 = array();
+        $res_1 = M('category')->where('id='.$category_id)->find();
+        if ($res_1['level'] == 1) {
+            $return['first'] = $res_1;
+        }elseif ($res_1['level'] ==  2) {
+            $res_2 = M('category')->where('id='.$res_1['pid'])->find();
+        }elseif ($res_1['level'] ==  3) {
+            $res_2 = M('category')->where('id='.$res_1['pid'])->find();
+            if ($res_2['pid'] == 0) {
+            }else{
+                $res_3 = M('category')->where('id='.$res_2['pid'])->find();
+            }
+        }
+        $return['first'] = $res_3;
+        $return['second'] = $res_2;
+        $return['third'] = $res_1;
+        if ($type == 2) {   //ajax  json
+            $this->ajaxReturn($return);
+            // exit (json_encode($return));
+        }else{
+            return $return;
+        }
+    }
 
     
 

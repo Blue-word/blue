@@ -30,7 +30,7 @@ class Common extends Controller{
      * @param int $json_option 传递给json_encode的option参数
      * @return blue
      */
-    protected function ajaxReturn($data,$type='',$json_option=0) {
+    public function ajaxReturn($data,$type='',$json_option=0) {
         if(empty($type)) $type  =   C('DEFAULT_AJAX_RETURN');
         switch (strtoupper($type)){
             case 'JSON' :

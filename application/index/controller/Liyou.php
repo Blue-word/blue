@@ -6,7 +6,9 @@ use think\Session;
 class Liyou extends Common{
 
     public function index(){
-        $position = input('post.position',1);
+        $position = Session::get('position');
+        //派样商品
+        $goods_where['area'] = $position;
         $goods_where['is_delete'] = 0;
         $goods_list = M('goods')->where($goods_where)->order('id desc')->limit(3)->select();
         if ($goods_list) {
@@ -36,6 +38,7 @@ class Liyou extends Common{
             }
         }
         //选惠
+        $tao_where['area'] = $position;
         $tao_where['is_delete'] = 0;
         $tao_list = M('tao_goods')->where($tao_where)->order('id desc')->limit(3)->select();
         if ($tao_list) {
@@ -58,10 +61,12 @@ class Liyou extends Common{
     }
 
     public function u_paiyang(){
+        $position = Session::get('position');
         $category = input('post.category');
         if ($category) {
             $where['category'] = $category;
         }
+        $where['area'] = $position;
         $where['is_delete'] = 0;
         $list = M('goods')->where($where)->order('id desc')->select();
         if ($list) {
@@ -85,10 +90,12 @@ class Liyou extends Common{
     }
 
     public function u_xuanhui(){
+        $position = Session::get('position');
         $category = input('post.category');
         if ($category) {
             $where['category'] = $category;
         }
+        $where['area'] = $position;
         $where['is_delete'] = 0;
         $list = M('tao_goods')->where($where)->select();
         if ($list) {
@@ -126,10 +133,12 @@ class Liyou extends Common{
     }
 
     public function u_paiyang_list(){
+        $position = Session::get('position');
         $category = input('post.category');
         if ($category) {
             $where['category'] = $category;
         }
+        $where['area'] = $position;
         $where['is_delete'] = 0;
         $list = M('goods')->where($where)->order('id desc')->select();
         if ($list) {
@@ -153,10 +162,12 @@ class Liyou extends Common{
     }
 
     public function u_xuanhui_list(){
+        $position = Session::get('position');
         $category = input('post.category');
         if ($category) {
             $where['category'] = $category;
         }
+        $where['area'] = $position;
         $where['is_delete'] = 0;
         $list = M('tao_goods')->where($where)->select();
         if ($list) {
@@ -185,5 +196,23 @@ class Liyou extends Common{
         // dump($info);
         $this->assign('info',$info);
         return $this->fetch();
+    }
+    /**
+     * 地区切换Session
+     *
+     * @author 蓝勇强 2019-01-03
+     * @return [type] [description]
+     */
+    public function savePositionSession(){
+        //地区切换：1南京、2苏州、3合肥
+        $position = I('post.position',1);
+        Session::set('position',$position);
+        $res = Session::get('position');
+        if ($res) {
+            $return = array('code'=>0,'msg'=>'操作成功','info'=>$res);
+        }else{
+            $return = array('code'=>1,'msg'=>'操作失败','info'=>$res);
+        }
+        $this->ajaxReturn($return);
     }
 }
