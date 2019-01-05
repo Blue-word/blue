@@ -274,33 +274,65 @@ class Goods extends Common{
         $where['level'] = $type;
         $where['is_delete'] = 0;
         $list = M('category')->where($where)->select();
+        $where['level'] = 2;
+        $where['is_delete'] = 0;
+        $second_category_list = M('category')->where($where)->select();
         // foreach ($list as $k => $v) {
         //  // $list[$k]['admin_name'] = M('admin')->where('uid',$v['uid'])->getField('name');
         //  $list[$k]['sex'] = $this->sex[$v['sex']];
         //  $list[$k]['time'] = date('Y-m-d H:i:s',$v['time']);
         // }
         // dump($list);
+        $category_where['level'] = 1;
+        $category_where['is_delete'] = 0;
+        $category_first = M('category')->where($category_where)->select();
         $this->assign('list',$list);
+        $this->assign('second_category_list',$second_category_list);
+        $this->assign('category_first',$category_first);
         return $this->fetch();
     }
 
     public function category_handle(){
         $data = input('post.');
-        // var_dump($data);
+        // var_dump($data);die;
         if(empty($data['id'])){      //无id为新增
-            $res = M('category')->save(['name'=>$data['name']]);
+            if ($data['sonCategoryId']) {
+                $add_data = array(
+                    'name' => $data['name'],
+                    'level' => 3,
+                    'pid' => $data['sonCategoryId'],
+                );
+            }elseif ($data['firstValue']) {
+                $add_data = array(
+                    'name' => $data['name'],
+                    'level' => 2,
+                    'pid' => $data['firstValue'],
+                );
+            }else{
+                $add_data = array(
+                    'name' => $data['name'],
+                    'level' => 1,
+                    'pid' => 0,
+                );
+            }
+            $res = M('category')->save($add_data);
             $string = '操作成功';
         }else{      
             if ($data['act'] == 'del') {    //有id有del为删除操作
-                // return (json_encode($data));
-                // exit (json_encode($data));
-                // $res = M('class_type')->where('id',$data['id'])->delete();
-                // if ($res) {      //删除成功将新人已选择班次类型置为1（该班次已被删除）
-                //  $update = M('new_survey')->where('class',$data['id'])->save(['class'=>1]);
-                // }
+                return (json_encode($data));
+                exit (json_encode($data));
+                $res = M('category')->where('id',$data['id'])->delete();
+                if ($res) {      //删除成功将新人已选择班次类型置为1（该班次已被删除）
+                 $update = M('category')->where('class',$data['id'])->save(['class'=>1]);
+                }
                 exit (json_encode($data));
             }else{      //有id无del为编辑
-                $res = M('class_type')->where('id',$data['id'])->save(['name'=>$data['name']]);
+                if ($data['sonCategoryId']) {
+                    $add_data = array(
+                        ''
+                    );
+                }
+                $res = M('category')->add($data);
                 $string = '操作失败';
             }
         }
