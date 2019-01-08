@@ -5,8 +5,14 @@ use think\Session;
 
 class Liyou extends Common{
 
+    public function _initialize(){
+        //初始化
+        Session::set('position',1);
+    }
+
     public function index(){
         $position = Session::get('position');
+        // dump($position);
         //派样商品
         $goods_where['area'] = $position;
         $goods_where['is_delete'] = 0;

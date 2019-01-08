@@ -20,6 +20,7 @@ class Admin extends Base{
                 // $condition['password'] = encrypt($condition['password']);
                 $admin_info = Db::table('admin')->alias('a')->join('admin_role b','a.role_id = b.role_id','INNER')->where($condition)->find();
                 print_r(Db::getLastsql());
+                // dump($admin_info);
                 if(!$admin_info){
                     // if ($admin_info['delete_status'] == 0) {  //账号被高级别管理员停用
                     //     $this->error("您的管理员账号已被停用，请联系上级管理员",U('index/admin/login'));

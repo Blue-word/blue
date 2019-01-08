@@ -27,7 +27,7 @@
                     <div class="col-sm-12">
                         <!-- Example Events -->
                         <div class="col-sm-8 example-wrap">
-                            <h4 class="example-title">商品类型列表&nbsp;&nbsp;&nbsp;<small>提示：删除商品会导致已选择该商品的新人的商品数据置为1（即下表商品ID为1的状态）</small></h4>
+                            <h4 class="example-title">商品类型列表&nbsp;&nbsp;&nbsp;<small style="color: red">提示：删除商品分类会导致该分类下的商品显示异常,请仔细核查该分类下是否有上架的商品</small></h4>
                             <div class="example">
                                 <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
                                     <button type="button" class="btn btn-outline btn-default" data-toggle="modal" data-target="#myModal2">
@@ -46,6 +46,7 @@
                                             <th data-field="state" data-checkbox="true"></th>
                                             <th data-sortable="true">分类ID</th>
                                             <th data-sortable="true">分类名</th>
+                                            <th data-sortable="true">级别</th>
                                             <th width="50">操作</th>
                                         </tr>
                                     </thead>
@@ -58,6 +59,9 @@
                                                 </td>
                                                 <td align="center" class="">
                                                     <div>{$vo.name}</div>
+                                                </td>
+                                                <td align="center" class="">
+                                                    <div>{$vo.category_name}</div>
                                                 </td>
                                                 <td align="center" class="">
                                                     
@@ -288,7 +292,7 @@
             $('#exampleTableEvents').on('click', '.demo5', function (event) {
                 swal(
                     {
-                        title: "您确定要『删除』此管理员吗",
+                        title: "您确定要『删除』此分类吗",
                         text: "删除后数据将无法恢复！",
                         type: "warning",
                         showCancelButton: true,
@@ -304,13 +308,13 @@
                             var id = $(event.currentTarget).attr('value');
                             $.ajax({
                                 type: 'POST',
-                                url: 'class_type_handle',
+                                url: 'category_handle',
                                 dataType: 'json',
                                 data: {id: id,act: 'del'},
                                 success: function(index){
                                     // console.log(index);
                                     $(event.currentTarget).parent().parent().remove();
-                                    swal("删除成功", "您已经删除此管理员。", "success");
+                                    swal("删除成功", "您已经删除此分类。", "success");
                                 },
                                 error:function(index) {
                                     swal("删除失败！", "您的删除出现错误！", "error");

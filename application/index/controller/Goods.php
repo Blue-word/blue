@@ -271,17 +271,25 @@ class Goods extends Common{
         if ($id) {
             $where['pid'] = $id;
         }
-        $where['level'] = $type;
+        // $where['level'] = $type;
         $where['is_delete'] = 0;
         $list = M('category')->where($where)->select();
+        foreach ($list as $k => $v) {
+             // $list[$k]['admin_name'] = M('admin')->where('uid',$v['uid'])->getField('name');
+            $list[$k]['sex'] = $this->sex[$v['sex']];
+            $list[$k]['time'] = date('Y-m-d H:i:s',$v['time']);
+            if ($v['level'] == 1) {
+                $list[$k]['category_name'] = '一级分类';
+            }elseif ($v['level'] == 2) {
+                $list[$k]['category_name'] = '二级分类';
+            }elseif ($v['level'] == 3) {
+                $list[$k]['category_name'] = '三级分类';
+            }
+        }
         $where['level'] = 2;
         $where['is_delete'] = 0;
         $second_category_list = M('category')->where($where)->select();
-        // foreach ($list as $k => $v) {
-        //  // $list[$k]['admin_name'] = M('admin')->where('uid',$v['uid'])->getField('name');
-        //  $list[$k]['sex'] = $this->sex[$v['sex']];
-        //  $list[$k]['time'] = date('Y-m-d H:i:s',$v['time']);
-        // }
+        
         // dump($list);
         $category_where['level'] = 1;
         $category_where['is_delete'] = 0;
@@ -319,13 +327,10 @@ class Goods extends Common{
             $string = '操作成功';
         }else{      
             if ($data['act'] == 'del') {    //有id有del为删除操作
-                return (json_encode($data));
-                exit (json_encode($data));
-                $res = M('category')->where('id',$data['id'])->delete();
-                if ($res) {      //删除成功将新人已选择班次类型置为1（该班次已被删除）
-                 $update = M('category')->where('class',$data['id'])->save(['class'=>1]);
-                }
-                exit (json_encode($data));
+                // return (json_encode($data));
+                // exit (json_encode($data));
+                $res = M('category')->where('id',$data['id'])->save(['is_delete'=>1]);
+                exit (json_encode($res));
             }else{      //有id无del为编辑
                 if ($data['sonCategoryId']) {
                     $add_data = array(
