@@ -14,9 +14,9 @@ class Liyou extends Common{
         $position = Session::get('position');
         // dump($position);
         //派样商品
-        $goods_where['area'] = $position;
+        $goods_where['area'] = array('like',$position.'%');
         $goods_where['is_delete'] = 0;
-        $goods_list = M('goods')->where($goods_where)->order('id desc')->limit(3)->select();
+        $goods_list = M('goods')->where($goods_where)->order('love_num desc')->limit(3)->select();
         if ($goods_list) {
             foreach ($goods_list as $key => $value) {
                 $goods_list[$key]['category_name'] = M('category')->where('id',$value['category'])->getField('name');
@@ -40,11 +40,12 @@ class Liyou extends Common{
             foreach ($activity_list as $key => $value) {
                 $activity_list[$key]['start_time'] = date('Y-m-d H:i',$value['start_time']);
                 $activity_list[$key]['end_time'] = date('Y-m-d H:i',$value['end_time']);
-                $activity_list[$key]['picture'] = $this->imageChange($value['picture']);
+                // $activity_list[$key]['picture'] = $this->imageChange($value['picture']);
             }
         }
+        // dump($activity_list);
         //选惠
-        $tao_where['area'] = $position;
+        $tao_where['area'] = array('like',$position.'%');
         $tao_where['is_delete'] = 0;
         $tao_list = M('tao_goods')->where($tao_where)->order('id desc')->limit(3)->select();
         if ($tao_list) {
@@ -72,7 +73,7 @@ class Liyou extends Common{
         if ($category) {
             $where['category'] = $category;
         }
-        $where['area'] = $position;
+        $where['area'] = array('like',$position.'%');
         $where['is_delete'] = 0;
         $list = M('goods')->where($where)->order('id desc')->select();
         if ($list) {
@@ -101,7 +102,7 @@ class Liyou extends Common{
         if ($category) {
             $where['category'] = $category;
         }
-        $where['area'] = $position;
+        $where['area'] = array('like',$position.'%');
         $where['is_delete'] = 0;
         $list = M('tao_goods')->where($where)->select();
         if ($list) {
@@ -111,7 +112,7 @@ class Liyou extends Common{
             }
         }
         
-        // dump($category_first);
+        // dump($list);
         $this->assign('list',$list);
         return $this->fetch();
     }
@@ -144,7 +145,7 @@ class Liyou extends Common{
         if ($category) {
             $where['category'] = $category;
         }
-        $where['area'] = $position;
+        $where['area'] = array('like',$position.'%');
         $where['is_delete'] = 0;
         $list = M('goods')->where($where)->order('id desc')->select();
         if ($list) {
@@ -173,7 +174,7 @@ class Liyou extends Common{
         if ($category) {
             $where['category'] = $category;
         }
-        $where['area'] = $position;
+        $where['area'] = array('like',$position.'%');
         $where['is_delete'] = 0;
         $list = M('tao_goods')->where($where)->select();
         if ($list) {
