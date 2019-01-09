@@ -39,6 +39,18 @@
   	.blog-sidebar{
   		padding: 0 1rem 0 1rem;
   	}
+    .carousel-map-text{
+        position: absolute;
+        left: 0.5%;
+        top: 1%;
+        width: 99%;
+        height: 98%;
+        /* border: 0.3rem solid #fff; */
+        padding: 3rem 8rem;
+        /* background-color: #fff; */
+        color: #f8f8f8;
+        font-size: 18px;
+    }
   </style>
 </head>
 
@@ -59,9 +71,9 @@
 
   <div class="am-collapse am-topbar-collapse" id="blog-collapse">
     <ul class="am-nav am-nav-pills am-topbar-nav">
-      <li class="am-active" onclick="position_change('1')"><a>南京</a></li>
-      <li class="am-active" onclick="position_change('2')"><a>苏州</a></li>
-      <li class="am-active" onclick="position_change('3')"><a>合肥</a></li>
+      <li <if $position == 1> class="am-active" </if> onclick="position_change('1')"><a>南京</a></li>
+      <li <if $position == 2> class="am-active" </if> onclick="position_change('2')"><a>苏州</a></li>
+      <li <if $position == 3> class="am-active" </if> onclick="position_change('3')"><a>合肥</a></li>
       <!-- <li class="am-active"><a href="lw-index.html">首页</a></li>
       <li class="am-active"><a href="lw-index.html">首页</a></li>
       <li class="am-dropdown" data-am-dropdown>
@@ -94,52 +106,48 @@
 <div class="am-g am-g-fixed blog-fixed am-u-sm-centered blog-article-margin">
     <div data-am-widget="slider" class="am-slider am-slider-b1" data-am-slider='{&quot;controlNav&quot;:false}' >
     <ul class="am-slides">
+      <foreach name="carousel_map" item="vo">
+        <li>
+            <a href="{$vo.info.link}">
+              <img src="{$vo.info.cover_pic}">
+              <div class="blog-fixed">
+                <!-- <span>{$vo.info.title}</span>  -->
+                  <div class="carousel-map-text">
+                      <span>{$vo.info.title}</span>               
+                  </div>
+              </div>
+            </a>
+        </li>
+      </foreach>
       <li>
             <img src="__PUBLIC__/static/assets/i/b1.jpg">
-            <div class="blog-slider-desc am-slider-desc ">
-                <div class="blog-text-center blog-slider-con">
-                    <span><a href="" class="blog-color">Article &nbsp;</a></span>               
-                    <h1 class="blog-h-margin"><a href="">总在思考一句积极的话</a></h1>
-                    <p>那时候刚好下着雨，柏油路面湿冷冷的，还闪烁着青、黄、红颜色的灯火。
-                    </p>
-                    <span class="blog-bor">2015/10/9</span>
-                    <br><br><br><br><br><br><br>                
+            <div class="blog-fixed">
+                <div class="carousel-map-text">
+                    <span>那时候刚好下着雨，柏油路面湿冷冷的，还闪烁着青、黄、红颜色的灯火。</span>
                 </div>
             </div>
       </li>
       <li>
             <img src="__PUBLIC__/static/assets/i/b2.jpg">
-            <div class="am-slider-desc blog-slider-desc">
-                <div class="blog-text-center blog-slider-con">
-                    <span><a href="" class="blog-color">Article &nbsp;</a></span>               
-                    <h1 class="blog-h-margin"><a href="">总在思考一句积极的话</a></h1>
-                    <p>那时候刚好下着雨，柏油路面湿冷冷的，还闪烁着青、黄、红颜色的灯火。
-                    </p>
-                    <span>2015/10/9</span>                
+            <div class="blog-fixed">
+                <div class="carousel-map-text">
+                    <span>那时候刚好下着雨，柏油路面湿冷冷的，还闪烁着青、黄、红颜色的灯火。</span>        
                 </div>
             </div>
       </li>
       <li>
             <img src="__PUBLIC__/static/assets/i/b3.jpg">
-            <div class="am-slider-desc blog-slider-desc">
-                <div class="blog-text-center blog-slider-con">
-                    <span><a href="" class="blog-color">Article &nbsp;</a></span>               
-                    <h1 class="blog-h-margin"><a href="">总在思考一句积极的话</a></h1>
-                    <p>那时候刚好下着雨，柏油路面湿冷冷的，还闪烁着青、黄、红颜色的灯火。
-                    </p>
-                    <span>2015/10/9</span>                
+            <div class="blog-fixed">
+                <div class="carousel-map-text">
+                    <span>那时候刚好下着雨，柏油路面湿冷冷的，还闪烁着青、黄、红颜色的灯火。</span>              
                 </div>
             </div>
       </li>
       <li>
             <img src="__PUBLIC__/static/assets/i/b2.jpg">
-            <div class="am-slider-desc blog-slider-desc">
-                <div class="blog-text-center blog-slider-con">
-                    <span><a href="" class="blog-color">Article &nbsp;</a></span>               
-                    <h1 class="blog-h-margin"><a href="">总在思考一句积极的话</a></h1>
-                    <p>那时候刚好下着雨，柏油路面湿冷冷的，还闪烁着青、黄、红颜色的灯火。
-                    </p>
-                    <span>2015/10/9</span>                
+            <div class="blog-fixed">
+                <div class="carousel-map-text">
+                    <span>那时候刚好下着雨，柏油路面湿冷冷的，还闪烁着青、黄、红颜色的灯火。</span>
                 </div>
             </div>
       </li>
@@ -161,7 +169,7 @@
             	<span style="float: right;font-size: 14px;"> <a href="{:U('liyou/u_paiyang_list')}" class="blog-color">@查看更多>></a></span>
             </h5>
         </div>
-        <foreach name="goods_list" item="vo">
+        <foreach name="goods_list" item="vo" empty="...暂无数据">
           <article class="am-g blog-entry-article">
             <h1 style="text-align: center;">{$vo.title}</h1>
             <a href="{:U('liyou/u_info',array('id'=>$vo.id))}">
@@ -192,7 +200,7 @@
                 <span style="text-align: center;">U选活动</span>
               </h2>
               <span style="float: right;font-size: 14px;padding-top: 6px;padding-right: 0px;"> <a href="{:U('liyou/activity_list')}" class="blog-color">@查看更多>></a></span>
-              <foreach name="activity_list" item="vo">
+              <foreach name="activity_list" item="vo" empty="...暂无数据">
                 <a href="{$vo.link}">
                   <img src="{$vo.picture}" alt="about me" class="am-img-thumbnail am-radius" >
                   <p>{$vo.content}</p>

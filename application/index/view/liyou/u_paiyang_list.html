@@ -56,11 +56,14 @@
         
 
         <div class="newsListTextInfo">
-          <i class="am-icon-heart active" style="font-size: 18px;"> {$vo.love_num}</i> <i class="am-icon-cny active" style="font-size: 18px;"> {$vo.price}</i>
+          <i class="am-icon-heart active" style="font-size: 16px;"> {$vo.love_num}</i> <i class="am-icon-cny active" style="font-size: 16px;"> {$vo.price}</i>
           
           <div class="newsListTextInfoNum">
-            <span><i class="am-icon-comments-o" style="font-size: 15px;"> {$vo.read_num}</i></span>
-            <span>{$vo.add_time}</span>
+            <span>
+              <i class="am-icon-comments-o" style="font-size: 13px;"> {$vo.read_num}</i>
+              {$vo.add_time}
+            </span>
+            <!-- <span>{$vo.add_time}</span> -->
             
           </div>
           <div class="newsListTextInfoNum">

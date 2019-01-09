@@ -47,7 +47,9 @@
  		<div class="articleContent">
  			<div class="articleContentLikeInfo">
  				<i class="am-icon-heart active" style="font-size: 18px;"> {$info.love_num}</i> <i class="am-icon-cny active" style="font-size: 18px;"> {$info.price}</i>
- 				<div class="share"><i class="am-icon-share-alt"></i> 分享</div>
+ 				<div class="share">
+          <a href="{:U('liyou/point_info',array('id'=>$vo.id))}"><i class="am-icon-share-alt">分享</i></a>
+        </div>
  			</div>
       <div class="articleContentText">
         <h3>商品内容 </h3>

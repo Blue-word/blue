@@ -7,7 +7,11 @@ class Liyou extends Common{
 
     public function _initialize(){
         //初始化
-        Session::set('position',1);
+        if (!Session::has('position')) {
+            Session::set('position',1);
+        }
+        $this->position = Session::get('position');
+        $this->assign('position',$this->position);
     }
 
     public function index(){
@@ -61,9 +65,13 @@ class Liyou extends Common{
                 $tao_list[$key]['picture'] = $this->imageChange($value['picture']);
             }
         }
+        //轮播
+        $carousel_map = $this->carouselMapList();
+        // dump($carousel_map);
         $this->assign('goods_list',$goods_list);
         $this->assign('activity_list',$activity_list);
         $this->assign('tao_list',$tao_list);
+        $this->assign('carousel_map',$carousel_map);
         return $this->fetch();
     }
 
@@ -222,4 +230,43 @@ class Liyou extends Common{
         }
         $this->ajaxReturn($return);
     }
+    public function carouselMapList(){
+        $where['is_delete'] = 0;
+        $where['status'] = 1;
+        $where['area'] = array('like',$this->position.'%');
+        $list = M('carousel_map')->where($where)->limit(5)->select();
+        foreach ($list as $key => $value) {
+            if ($value['table'] && $value['table_id']) {
+                $list[$key]['info'] = M($value['table'])->where('id',$value['table_id'])->find();
+            }
+        }
+        // dump($where);
+        // dump($list);
+        // dump(M('carousel_map')->getLastsql());
+        if ($list) {
+            return $list;
+        }else{
+            return false;
+        }
+    }
+    public function point_info(){
+        $id = I('id');
+        $info = M('goods')->where('id',$id)->find();
+        if ($info) {
+            $info['category_name'] = M('category')->where('id',$info['category'])->getField('name');
+            $info['add_time'] = date('Y-m-d H:i',$info['add_time']);
+            $info['picture'] = explode(',', $info['picture']);
+            $category_name_first = $this->getcFirstCategory('category',3,$info['category']);
+            if (!$category_name_first['code']) {
+                $info['category_name_first'] = $category_name_first['info']['name'];
+            }else{
+                $info['category_name_first'] = '';
+            }
+        }
+        // dump($info);
+        $this->assign('info',$info);
+        return $this->fetch();
+    }
+
+
 }

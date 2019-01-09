@@ -59,9 +59,9 @@
 
   <div class="am-collapse am-topbar-collapse" id="blog-collapse">
     <ul class="am-nav am-nav-pills am-topbar-nav">
-      <li class="am-active" onclick="position_change('1')"><a>南京</a></li>
-      <li class="am-active" onclick="position_change('2')"><a>苏州</a></li>
-      <li class="am-active" onclick="position_change('3')"><a>合肥</a></li>
+      <li <if $position == 1> class="am-active" </if> onclick="position_change('1')"><a>南京</a></li>
+      <li <if $position == 2> class="am-active" </if> onclick="position_change('2')"><a>苏州</a></li>
+      <li <if $position == 3> class="am-active" </if> onclick="position_change('3')"><a>合肥</a></li>
       <!-- <li class="am-active"><a href="lw-index.html">首页</a></li>
       <li class="am-active"><a href="lw-index.html">首页</a></li>
       <li class="am-dropdown" data-am-dropdown>
@@ -148,8 +148,8 @@
 </div>
 
 <ul class="am-nav am-nav-tabs am-nav-justify">
-  <li class="am-active"><a href="{:U('liyou/index')}">热门</a></li>
-  <li><a href="{:U('liyou/u_paiyang')}">U选派样</a></li>
+  <li><a href="{:U('liyou/index')}">热门</a></li>
+  <li class="am-active"><a href="{:U('liyou/u_paiyang')}">U选派样</a></li>
   <li><a href="{:U('liyou/u_xuanhui')}">U选惠</a></li>
 </ul>
 <!-- content srart -->
@@ -161,7 +161,7 @@
             	<span style="float: right;font-size: 14px;"> <a href="{:U('liyou/u_paiyang_list')}" class="blog-color">@查看更多>></a></span>
             </h5>
         </div>
-        <foreach name="list" item="vo">
+        <foreach name="list" item="vo" empty="...暂无数据">
           <article class="am-g blog-entry-article">
             <h1 style="text-align: center;">{$vo.title}</h1>
             <a href="{:U('liyou/u_info',array('id'=>$vo.id))}">
@@ -192,7 +192,7 @@
                 <span style="text-align: center;">U选活动</span>
               </h2>
               <span style="float: right;font-size: 14px;padding-top: 6px;padding-right: 0px;"> <a href="{:U('liyou/activity_list')}" class="blog-color">@查看更多>></a></span>
-              <foreach name="activity_list" item="vo">
+              <foreach name="activity_list" item="vo" empty="...暂无数据">
                 <a href="{$vo.link}">
                   <img src="{$vo.picture}" alt="about me" class="am-img-thumbnail am-radius" >
                   <p>{$vo.content}</p>
