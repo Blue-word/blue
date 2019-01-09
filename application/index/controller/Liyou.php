@@ -253,7 +253,6 @@ class Liyou extends Common{
         $area = I('area');
         $area = explode(',',$area);
         $list = M('point')->where('id',array('in',$area))->select();
-            dump(M('point')->getLastsql());
         if ($list) {
             foreach ($list as $key => $value) {
                 $list[$key]['area_name'] = M('area')->where('id',$value['area'])->getField('name');
@@ -261,6 +260,16 @@ class Liyou extends Common{
         }
         // dump($list);
         $this->assign('list',$list);
+        return $this->fetch();
+    }
+    public function point_info(){
+        $id = I('id');
+        $info = M('point')->where('id',$id)->find();
+        if ($info) {
+            $info['area_name'] = M('area')->where('id',$info['area'])->getField('name');
+        }
+        // dump($info);
+        $this->assign('info',$info);
         return $this->fetch();
     }
 

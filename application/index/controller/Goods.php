@@ -587,7 +587,7 @@ class Goods extends Common{
             foreach ($list as $key => $value) {
                 $list[$key]['start_time'] = date('Y-m-d H:i',$value['start_time']);
                 $list[$key]['end_time'] = date('Y-m-d H:i',$value['end_time']);
-                $list[$key]['picture'] = $this->imageChange($value['picture']);
+                // $list[$key]['picture'] = $this->imageChange($value['picture']);
             }
         }
         $this->assign('list',$list);
@@ -600,8 +600,8 @@ class Goods extends Common{
             $info = M('activity')->where('id',$id)->find();
             $info['start_time'] = date('Y-m-d H:i:s',$info['start_time']);
             $info['end_time'] = date('Y-m-d H:i:s',$info['end_time']);
-            $info['picture'] = $this->imageChange($info['picture']);
-            // $picture = explode(',',$info['picture']);
+            // $info['picture'] = $this->imageChange($info['picture']);
+            $picture = explode(',',$info['picture']);
             $this->assign('info',$info);
         }
         $act = empty($id) ? 'add' : 'edit';

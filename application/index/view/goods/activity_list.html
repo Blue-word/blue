@@ -66,13 +66,12 @@
                                                 </td>
                                                 <td align="center" class="">
                                                     <div>
-                                                        <a href="{:U('goods/activity_info',array('id'=>$vo['id']))}" style="color: #676a6c">
-                                                            <button type="button" class="btn btn-outline btn-default" href="{:U('goods/activity_info')}">{$vo.title} / 查看名单</button>
-                                                        </a>{$vo.title}
+                                                        <a href="{:U('goods/activity_info',array('id'=>$vo['id']))}" style="color: #337ab7;">{$vo.title}
+                                                        </a>
                                                     </div>
                                                 </td>
                                                 <td align="center" class="">
-                                                    <div><img src="{$vo.picture}"></div>
+                                                    <div><img src="{$vo.picture}" style="width: 80%;"></div>
                                                 </td>
                                                 <!-- <td align="center" class="">
                                                     <div>　
@@ -119,8 +118,8 @@
                                                     <elseif condition="$vo.status eq 1">
                                                         <button class="btn btn-warning btn-sm demo5" value="{$vo.id}">驳回</button>
                                                     </if> 
-                                                    <a href="{:U('goods/activity_view',array('id'=>$vo['id']))}"><button class="btn btn-info btn-sm" >查看</button>
-                                                    </a>
+                                                    <!-- <a href="{:U('goods/activity_view',array('id'=>$vo['id']))}"><button class="btn btn-info btn-sm" >查看</button>
+                                                    </a> -->
                                                     <a href="{:U('goods/activity_info',array('id'=>$vo['id']))}"><button class="btn btn-primary btn-sm" >编辑</button>
                                                     </a>
                                                     <button class="btn btn-danger btn-sm demo6" value="{$vo.id}">删除</button>
