@@ -249,22 +249,18 @@ class Liyou extends Common{
             return false;
         }
     }
-    public function point_info(){
-        $id = I('id');
-        $info = M('goods')->where('id',$id)->find();
-        if ($info) {
-            $info['category_name'] = M('category')->where('id',$info['category'])->getField('name');
-            $info['add_time'] = date('Y-m-d H:i',$info['add_time']);
-            $info['picture'] = explode(',', $info['picture']);
-            $category_name_first = $this->getcFirstCategory('category',3,$info['category']);
-            if (!$category_name_first['code']) {
-                $info['category_name_first'] = $category_name_first['info']['name'];
-            }else{
-                $info['category_name_first'] = '';
+    public function point_list(){
+        $area = I('area');
+        $area = explode(',',$area);
+        $list = M('point')->where('id',array('in',$area))->select();
+            dump(M('point')->getLastsql());
+        if ($list) {
+            foreach ($list as $key => $value) {
+                $list[$key]['area_name'] = M('area')->where('id',$value['area'])->getField('name');
             }
         }
-        // dump($info);
-        $this->assign('info',$info);
+        // dump($list);
+        $this->assign('list',$list);
         return $this->fetch();
     }
 
