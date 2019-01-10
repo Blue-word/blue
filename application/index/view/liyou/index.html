@@ -56,15 +56,12 @@
 
 <body id="blog">
 
-<header class="am-g am-g-fixed blog-fixed blog-text-center blog-header">
-	<!-- <h2 class="am-hide-sm-only">HTML5</h2> -->
+<!-- <header class="am-g am-g-fixed blog-fixed blog-text-center blog-header">
     <div class="am-u-sm-8 am-u-sm-centered">
         <h2 class="am-show-lg-down" style="font-size: 26px">历优U选</h2>
-        <!-- <img width="200" src="http://s.amazeui.org/media/i/brand/amazeui-b.png" alt="Amaze UI Logo"/> -->
-        <!-- <h2 class="am-hide-sm-only">中国首个开源 HTML5 跨屏前端框架</h2> -->
     </div>
-</header>
-<hr>
+</header> -->
+<!-- <hr> -->
 <!-- nav start -->
 <nav class="am-g am-g-fixed blog-fixed blog-nav">
 <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only blog-button" data-am-collapse="{target: '#blog-collapse'}" >地区切换<span class="am-sr-only">地区切换</span> <span class="am-icon-street-view"></span></button>
@@ -120,12 +117,14 @@
         </li>
       </foreach>
       <li>
+          <a href="https://mp.weixin.qq.com/s/8e5nJ9vzdLvWgIjAkco5hQ">
             <img src="__PUBLIC__/static/assets/i/b1.jpg">
             <div class="blog-fixed">
                 <div class="carousel-map-text">
                     <span>This app gives you all the unique moments of exploring</span>
                 </div>
             </div>
+          </a>
       </li>
       <li>
             <img src="__PUBLIC__/static/assets/i/b2.jpg">
@@ -199,7 +198,7 @@
               <h2 class="blog-text-center blog-title">
                 <span style="text-align: center;">U选活动</span>
               </h2>
-              <span style="float: right;font-size: 14px;padding-top: 6px;padding-right: 0px;"> <a href="{:U('liyou/activity_list')}" class="blog-color">@查看更多>></a></span>
+              <span style="float: right;font-size: 14px;padding-top: 6px;padding-right: 0px;"> <a href="{:U('liyou/u_activity_list')}" class="blog-color">@查看更多>></a></span>
               <foreach name="activity_list" item="vo" empty="...暂无数据">
                 <a href="{$vo.link}">
                   <img src="{$vo.picture}" alt="about me" class="am-img-thumbnail am-radius" >

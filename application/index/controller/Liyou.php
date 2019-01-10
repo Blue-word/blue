@@ -129,7 +129,7 @@ class Liyou extends Common{
         $p = I('p',1);
         $activity_where['status'] = array('in','1,2,3');
         $activity_where['is_delete'] = 0;
-        $activity_list = M('activity')->where($where)->order('id desc')->page($p,10)->select();
+        $activity_list = M('activity')->where($where)->order('id desc')->select();
         if ($activity_list) {
             foreach ($activity_list as $key => $value) {
                 $activity_list[$key]['start_time'] = date('Y-m-d H:i',$value['start_time']);
@@ -138,12 +138,12 @@ class Liyou extends Common{
                 $activity_list[$key]['content'] = mb_substr($value['content'], 0, 10,'utf-8').'...';
             }
         }
-        $count = M('activity')->where($where)->count();
-        $page = new Page($count,10);
-        $show = $page->show();
+        // $count = M('activity')->where($where)->count();
+        // $page = new Page($count,10);
+        // $show = $page->show();
         $this->assign('list',$activity_list);
-        $this->assign('page',$page);
-        $this->assign('show',$show);
+        // $this->assign('page',$page);
+        // $this->assign('show',$show);
         return $this->fetch();
     }
 

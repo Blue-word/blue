@@ -705,6 +705,69 @@ class Goods extends Common{
             return $return;
         }
     }
+    public function point_list(){
+        $list = M('point')->where($where)->select();
+        if ($list) {
+            foreach ($list as $key => $value) {
+                $list[$key]['area_name'] = M('area')->where('id',$value['area'])->getField('name');
+                // $list[$key]['add_time'] = date('Y-m-d H:i',$value['add_time']);
+            }
+        }
+        // dump($list);
+        $this->assign('list',$list);
+        return $this->fetch();
+    }
+
+    public function point_info(){
+        $id = input('id');
+        if($id){
+            $info = M('point')->where('id',$id)->find();
+            //分类选中
+            $picture = explode(',',$info['picture']);
+            $this->assign('info',$info);
+        }
+        $act = empty($id) ? 'add' : 'edit';
+        // dump($info);
+        $this->assign('act',$act);
+        $this->assign('pic_list',$picture);
+        return $this->fetch();
+    }
+    public function point_handle(){
+        $data = input('post.');
+        $model = model('Point');
+        // dump($data);die;
+        // $data['picture'] = $data['image'];
+        if($data['act'] == 'add'){
+            unset($data['id'],$data['image']);           
+            // $data['add_time'] = time();
+            if ($data['picture']) {
+                $data['picture'] = implode(',',$data['picture']);
+            }else{
+                $data['picture'] = '';
+            }
+            $res = $model->allowField(true)->save($data);
+        }
+        
+        if($data['act'] == 'edit'){
+            $data['picture'] = implode(',',$data['picture']);
+            $res = $model->allowField(true)->save($data,['id' => $data['id']]);
+        }
+        
+        // if($data['act'] == 'del'){
+        //     $res = D('new_course')->where('id', $data['id'])->save(['del_status'=>1]);
+        //     exit(json_encode($data));
+        // }
+
+        if($data['act'] == 'audit' || $data['act'] == 'ajax'){
+            $res = $model->where('id', $data['id'])->save(['status'=>$data['status']]);
+            exit(json_encode($res));
+        }
+        // if($res){
+        //     $this->success("操作成功",U('index/pacificocean/course_list'));
+        // }else{
+        //     $this->error("操作失败",U('index/pacificocean/course_info',array('id'=>$data['id'])));
+        // }
+    }
 
     
 
