@@ -164,7 +164,7 @@
         <foreach name="list" item="vo" empty="...暂无数据">
           <article class="am-g blog-entry-article">
             <h1 style="text-align: center;">{$vo.title}</h1>
-            <a href="{:U('liyou/u_info',array('id'=>$vo.id))}">
+            <a href="{:U('liyou/u_tao_info',array('id'=>$vo.id))}">
               <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
                   <img src="{$vo.cover_pic}" alt="" class="am-img-thumbnail am-radius">
               </div>
