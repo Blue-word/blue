@@ -4,6 +4,7 @@ use think\Controller;
 use think\Db;
 use think\Model;
 use think\db\Query;
+use think\Hook;
 
 class Test extends Base{
 
@@ -99,4 +100,25 @@ class Test extends Base{
         dump($list);
         return $this->fetch();
     }
+
+    public function test03()
+    {
+        // Hook::add('action_begin','app\index\behavior\Test');
+        // Hook::add('app_init','app\\index\\behavior\\Test');
+        // Hook::add('app_begin','app\index\behavior\Test');
+        $params = 'asd';
+        // Hook::listen('app_init',$params);   //添加行为侦听
+        
+        // Hook::listen('module_init',$params);   //添加行为侦听
+        
+        // Hook::listen('action_begin',$params);   //添加行为侦听
+        // Hook::listen('app_begin',$params);   //添加行为侦听
+
+        echo "<br/>";
+        echo "end";
+
+    }
+    
+
+
 }

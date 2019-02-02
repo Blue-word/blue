@@ -7,7 +7,7 @@
   <meta name="keywords" content="">
   <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Amaze UI Examples</title>
+  <title>商品详情</title>
   <link rel="stylesheet" href="__PUBLIC__/static/assets_app/css/amazeui.min.css">
   <link rel="stylesheet" href="__PUBLIC__/static/assets_app/css/app.css">
 </head>
@@ -21,7 +21,7 @@
  			<div class="articleCoverInfo">
  				<div class="newsListTitleLeft">
  					<div class="userHead">
- 						<img src="{$info.picture.0}">
+ 						<img src="{$info.cover_pic}">
  					</div>
  					<div class="userName">{$info.category_name}</div>
  				</div>
@@ -45,12 +45,12 @@
  		</div>
 
  		<div class="articleContent">
- 			<div class="articleContentLikeInfo">
+ 			<!-- <div class="articleContentLikeInfo">
  				<i class="am-icon-heart active" style="font-size: 18px;"> {$info.love_num}</i> <i class="am-icon-cny active" style="font-size: 18px;"> {$info.price}</i>
  				<div class="share">
           <a href="{:U('liyou/point_list',array('area'=>$info.area))}"><i class="am-icon-angle-double-down"> 点位</i></a>
         </div>
- 			</div>
+ 			</div> -->
       <div class="articleContentText">
         <h3>商品内容 </h3>
         <p>{$info.content}</p>

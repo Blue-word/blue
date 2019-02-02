@@ -4,6 +4,7 @@ use think\Controller;
 use think\Model;
 use think\Session;
 use think\db\Query;
+use think\Paginator;
 
 class Goods extends Common{
 
@@ -15,51 +16,20 @@ class Goods extends Common{
     public function position_set(){
         return $this->fetch();
     }
-
-    public function signinfo_handle(){
-        $model = model('PositionInfo');
-        $data = input('post.');
-        $data['time'] = date('Y-m-d H:i:s',time());
-        if ($data['act'] == 'add') {
-            $res = $model->allowField(true)->save($data);
-        }
-        if ($res) {
-            $this->success("添加成功",U('pacificocean/position_set'));
-        }else{
-            $this->success("添加失败",U('pacificocean/position_set'));
-        }
-        dump($data);
-        dump($res);
-    }
     /**
     * 商品列表 
     **/
     public function goods_list(){
         $list = M('goods')->where($where)->select();
-        // $uid = session('uid');   //管理员uid
-        // $son_uid = cache('son_uid_'.$uid).','.$uid;  //缓存中获取子级管理员
-        // if ($son_uid !== 'all') {    //超级次级管理员
-        //     $where['uid'] = ['in',$son_uid];
-        // }
-        // $where['del_status'] = 0;
-        // $list = M('new_course')->where($where)->order('id desc')->select();
         if ($list) {
+            $list = M('goods')->order('id desc')->paginate(9);
             foreach ($list as $key => $value) {
-                // $list[$k]['admin_name'] = M('admin')->where('uid',$v['uid'])->getField('name');
-                // $audit_name = M('admin')->where('uid',$v['audit_uid'])->getField('name');
-                // if (!($audit_name)) {
-                //     $audit_name = '暂无';
-                // }
-                // if ($v['course_cate'] == null) {
-                //     $list[$k]['course_cate'] = '未设置';
-                // }
-                // $list[$k]['audit_name'] = $audit_name;
                 $list[$key]['category_name'] = M('category')->where('id',$value['id'])->getField('name');
                 $list[$key]['add_time'] = date('Y-m-d H:i',$value['add_time']);
             }
+            $page = $list->render();
+            $this->assign('page', $page);
         }
-
-        // dump($list);
         $this->assign('list',$list);
         return $this->fetch();
     }
@@ -170,86 +140,6 @@ class Goods extends Common{
         return $this->fetch();
     }
 
-    public function apply_list1(){
-        $id = input('id');  //课程id
-        $course_name = M('new_course')->where('id',$id)->getField('title');
-        $list = M('new_apply')->where('course_id',$id)->select();
-        foreach ($list as $k => $v) {
-            $list[$k]['new_name'] = M('new_survey')->where('id',$v['new_id'])->getField('name');
-            $list[$k]['time'] = date('Y-m-d H:i:s',$v['time']);
-        }
-        // dump($list);
-        $this->assign('id',$id);
-        $this->assign('list',$list);
-        $this->assign('course_name',$course_name);
-        return $this->fetch();
-    }
-
-    public function apply_list(){
-        $id = input('id',14);  //创说会id
-        $title = M('new_course')->where('id',$id)->getField('title');
-        $list = M('course_apply')->where('course_id',$id)->select();
-        foreach ($list as $k => $v) {
-            $list[$k]['name'] = M('new_survey')->where('openid',$v['openid'])->getField('name');
-            $list[$k]['time'] = date('Y-m-d H:i:s',$v['time']);
-        }
-        dump(time());
-        $this->assign('id',$id);
-        $this->assign('list',$list);
-        $this->assign('course_name',$title);
-        return $this->fetch();
-    }
-
-    public function act_apply_list(){   //创说会签到表
-        $id = input('id',14);  //创说会id
-        $title = M('new_add')->where('id',$id)->getField('title');
-        $list = M('activity_apply')->where('activity_id',$id)->select();
-        foreach ($list as $k => $v) {
-            $list[$k]['name'] = M('userinfo')->where('openid',$v['openid'])->getField('nickname');
-            $list[$k]['time'] = date('Y-m-d H:i:s',$v['time']);
-        }
-
-        dump(cache('son_uid'));
-        $this->assign('id',$id);
-        $this->assign('list',$list);
-        $this->assign('course_name',$title);
-        return $this->fetch();
-    }
-
-    public function new_list(){
-        $list = M('new_survey')->field('id,name,sex,time,openid')->select();
-        foreach ($list as $k => $v) {
-            $list[$k]['class'] = M('class_type')->where('id',$v['class'])->getField('name');
-            $list[$k]['sex'] = $this->sex[$v['sex']];
-            $list[$k]['time'] = date('Y-m-d H:i:s',$v['time']);
-        }
-        // dump($where);
-        $this->assign('list',$list);
-        return $this->fetch();
-    }
-
-    public function new_info(){    //新人信息
-        $openid = input('openid');
-        if($openid){
-            $wx = M('userinfo')->where('openid',$openid)->find();
-            $wx['address'] =  $wx['country']. $wx['province'].'省'. $wx['city'].'市' ;
-            
-            $info = M('new_survey')->where('openid',$openid)->find();
-            $info['time'] = date('Y-m-d H:i:s',$info['time']);
-            $info['sex'] = $this->sex[$wx['sex']];
-            $info['wx'] = $wx;
-            $list = M('new_log')->where('new_id',$info['openid'])->limit(10)->order('log_id desc')->select();
-            foreach ($list as $k => $v) {
-                $list[$k]['new_name'] = M('new_survey')->where('openid',$info['openid'])->getField('name');
-                $list[$k]['log_time_1'] = time_change(strtotime($v['log_time']));
-            }
-            $this->assign('info',$info);
-            $this->assign('list',$list);
-        }
-        // dump($info);
-        return $this->fetch();
-    }
-
     public function weixin_info(){
         $id = input('id');
         if($id){
@@ -348,119 +238,6 @@ class Goods extends Common{
         // $this->redirect('index/pacificocean/class_type_list');
     }
 
-    public function new_add_list(){    //增员活动列表
-        $uid = session('uid');   //管理员uid
-        $son_uid = cache('son_uid_'.$uid).','.$uid;  //缓存中获取子级管理员
-        if ($son_uid !== 'all') {    //超级次级管理员
-            $where['uid'] = ['in',$son_uid];
-        }
-        $where['del_status'] = 0;
-        $list = M('new_add')->where($where)->order('id desc')->select();
-        if ($list) {
-            foreach ($list as $k => $v) {
-                $list[$k]['admin_name'] = M('admin')->where('uid',$v['uid'])->getField('name');
-                $audit_name = M('admin')->where('uid',$v['audit_uid'])->getField('name');
-                if (!($audit_name)) {
-                    $audit_name = '暂无';
-                }
-                $list[$k]['audit_name'] = $audit_name;
-                $list[$k]['time'] = date('Y-m-d H:i',$v['time']);
-            }
-        }
-        // dump($where);
-        $this->assign('list',$list);
-        return $this->fetch();
-    }
-
-    public function new_add_info(){
-        $id = input('id');
-        if($id){
-            $info = M('new_add')->where('id',$id)->find();
-            $info['start_time'] = date('Y-m-d H:i:s',$info['start_time']);
-            $info['end_time'] = date('Y-m-d H:i:s',$info['end_time']);
-            $this->assign('info',$info);
-        }
-        $act = empty($id) ? 'add' : 'edit';
-        // dump($info);
-        $this->assign('act',$act);
-        return $this->fetch();
-    }
-
-    public function new_add_handle(){
-        $data = input('post.');
-        $model = model('NewAdd');
-        // dump($data);
-        if($data['act'] == 'add'){
-            unset($data['id']);           
-            $data['time'] = time();
-            $data['start_time'] = strtotime($data['start_time']);
-            $data['end_time'] = strtotime($data['end_time']);
-            $data['uid']  = Session::get('uid');
-            // dump($data);$model->id
-            $res = $model->allowField(true)->save($data);
-            if ($res) {
-                $code_data['key'] = 'bfa9f553b33623744d67e8638226604e';
-                $code_data['text'] = 'http://www.netqlv.com/blue/api/index/index2?id='.$model->id;
-                $code_data['type'] = 1;
-                $code_content = $this->http_request('http://apis.juhe.cn/qrcode/api',$code_data);
-                $code_result = json_decode($code_content,TRUE);
-                $img = base64_decode($code_result['result']['base64_image']);
-                $address = ROOT_PATH . 'public' . DS . 'upload' . DS . 'code' . DS .date('Ymd') . DS ;
-                if (!is_dir($address)) mkdir($address); // 如果不存在则创建
-                $time = time();
-                $code_url = file_put_contents($address.$time.'.jpg', $img);
-                $data_code_address = '/blue/public/upload/code/'.date('Ymd').'/'.$time.'.jpg';
-                $res_1 = M('new_add')->where('id',$model->id)->save(['code_address'=>$data_code_address]);
-            }
-        }
-        
-        if($data['act'] == 'edit'){
-            $data['time'] = time();
-            $data['start_time'] = strtotime($data['start_time']);
-            $data['end_time'] = strtotime($data['end_time']);
-            // dump($data);
-            $res = $model->allowField(true)->save($data,['id' => $data['id']]);
-        }
-        
-        if($data['act'] == 'del'){
-            $res = D('new_add')->where('id', $data['id'])->save(['del_status'=>1]);
-            exit(json_encode($data));
-        }
-
-        if($data['act'] == 'audit' || $data['act'] == 'ajax'){
-            $audit_uid = Session::get('uid');
-            $res = M('new_add')->where('id', $data['id'])->save(['status'=>$data['status'],'audit_uid'=>$audit_uid]);
-            // exit(json_encode($data));
-            // dump($res);
-        }
-        
-        if($res){
-            $this->success("操作成功",U('index/pacificocean/new_add_list'));
-        }else{
-            $this->error("操作失败",U('index/pacificocean/new_add_info',array('id'=>$data['id'])));
-        }
-    }
-
-    public function new_add_view(){
-        $id = input('id');
-        if($id){
-            $info = M('new_add')->where('id',$id)->find();
-            $info['start_time'] = date('Y-m-d H:i:s',$info['start_time']);
-            $info['end_time'] = date('Y-m-d H:i:s',$info['end_time']);
-            $info['admin_name'] = M('admin')->where('uid',$info['uid'])->getField('name');
-            $info['audit_name'] = M('admin')->where('uid',$info['audit_uid'])->getField('name');
-            $info['code_address'] = img_url_transform($info['code_address'],'absolute');
-            $this->assign('info',$info);
-        }
-        // dump($info);
-        return $this->fetch();
-    }
-    /**
-     * 
-     *
-     * @author 蓝勇强 2018-12-14
-     * @return [type] [description]
-     */
     public function tao_goods_list(){
         $category = input('post.category');
         if ($category) {
@@ -561,6 +338,7 @@ class Goods extends Common{
         // dump($info);
         return $this->fetch();
     }
+
     public function getSonCategory(){
         $id = input('category_id');
         $type = input('type');
@@ -570,12 +348,7 @@ class Goods extends Common{
         $category_first = M('category')->where($category_where)->select();
         $this->ajaxReturn($category_first);
     }
-    /**
-     * 
-     *
-     * @author 蓝勇强 2018-12-14
-     * @return [type] [description]
-     */
+
     public function activity_list(){
         $status = input('post.status');
         if ($status) {
@@ -663,14 +436,14 @@ class Goods extends Common{
         }
         return $this->fetch();
     }
+
     /**
      * 获取分类信息
-     *
-     * @author blue 2018-12-17
-     * @param  string  $model 模型
-     * @param  integer $type  类型
-     * @param  string  $id    分类id
-     * @return [type]         [description]
+     * @author: 蓝勇强
+     * Date: 2019/2/2 10:57
+     * @param int $category_id
+     * @param int $type
+     * @return array
      */
     public function getCategoryInfo($category_id=0,$type=1){
         $type = I('get.type');
@@ -705,6 +478,7 @@ class Goods extends Common{
             return $return;
         }
     }
+
     public function point_list(){
         $list = M('point')->where($where)->select();
         if ($list) {
@@ -732,6 +506,7 @@ class Goods extends Common{
         $this->assign('pic_list',$picture);
         return $this->fetch();
     }
+
     public function point_handle(){
         $data = input('post.');
         $model = model('Point');

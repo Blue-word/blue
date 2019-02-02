@@ -186,21 +186,28 @@ class Liyou extends Common{
     }
 
     public function u_xuanhui_list(){
-        $position = Session::get('position');
         $category = input('post.category');
         if ($category) {
             $where['category'] = $category;
         }
-        $where['area'] = array('like',$position.'%');
         $where['is_delete'] = 0;
         $list = M('tao_goods')->where($where)->select();
         if ($list) {
             foreach ($list as $key => $value) {
                 $list[$key]['category_name'] = M('category')->where('id',$value['id'])->getField('name');
                 $list[$key]['add_time'] = date('Y-m-d H:i',$value['add_time']);
+                $list[$key]['picture'] = explode(',', $value['picture']);
                 $list[$key]['content'] = mb_substr($value['content'], 0, 10,'utf-8').'...';
+                $category_name_first = $this->getcFirstCategory('category',3,$value['category']);
+                if (!$category_name_first['code']) {
+                    $list[$key]['category_name_first'] = $category_name_first['info']['name'];
+                }else{
+                    $list[$key]['category_name_first'] = '';
+                }
             }
         }
+        // dump($list);
+        $this->assign('list',$list);
         return $this->fetch();
     }
 

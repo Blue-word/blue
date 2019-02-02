@@ -34,10 +34,12 @@ function img_url_transform($url,$type){
     }
     return $result;
 }
+
 /**
  * 管理员操作记录
- * @param $log_url 操作URL
- * @param $log_info 记录信息
+ * @author: 蓝勇强 2019/2/2 11:19
+ * @param $log_info
+ * @return mixed
  */
 function adminLog($log_info){
     $request = Request::instance();
@@ -49,10 +51,14 @@ function adminLog($log_info){
     M('admin_log')->add($add);
     return $add;
 }
+
 /**
  * 用户日志记录
- * @param $log_url 操作URL
- * @param $log_info 记录信息
+ * @author: 蓝勇强
+ * Date: 2019/2/2 11:18
+ * @param $log_info
+ * @param $openid
+ * @return mixed
  */
 function newLog($log_info,$openid){
     $request = Request::instance();
