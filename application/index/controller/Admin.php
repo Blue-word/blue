@@ -5,39 +5,38 @@ use think\Session;
 use think\Db;
 use think\db\Query;
 use think\Model;
+use app\index\logic;
+use think\Loader;
 
 class Admin extends Base{
 
     public function login(){   //登录
-        if(session('?uid') && session('uid')>0){
-            // dump(session('uid'));
-            $this->error("您已登录",U('index/index/index'));
-        }
         if(request()->isPost()){
-            $condition['name'] = I('post.name/s');
-            $condition['password'] = I('post.password/s');
-            if(!empty($condition['name']) && !empty($condition['password'])){
-                // $condition['password'] = encrypt($condition['password']);
-                $admin_info = Db::table('admin')->alias('a')->join('admin_role b','a.role_id = b.role_id','INNER')->where($condition)->find();
-                print_r(Db::getLastsql());
-                // dump($admin_info);
-                if(!$admin_info){
-                    // if ($admin_info['delete_status'] == 0) {  //账号被高级别管理员停用
-                    //     $this->error("您的管理员账号已被停用，请联系上级管理员",U('index/admin/login'));
-                    // }
-                    session('uid',$admin_info['admin_uid']);
-                    session('role_id',$admin_info['role_id']);
-                    session('role_name',$admin_info['role_name']);
-                    session('admin_name',$admin_info['name']);
-                    session('act_list',$admin_info['act_list']);
-                    // M('admin')->where('uid',$admin_info['admin_uid'])->save(array('last_login'=>time(),'last_ip'=>getIP()));
-                    // adminLog($admin_info['user_name']."登录");
-                    $this->success("登陆成功",U('index/index/index'));
-                }else{
-                    $this->error("用户名或密码不正确");
+            $data = I('post.');
+            $validate = Loader::validate('Admin');
+            if(!$validate->check($data)){
+                $this->error("请勿重复提交");
+            }
+            if(session('?uid') && session('uid')>0){
+                $this->error("您已登录",U('index/index/index'));
+            }
+            $logic_model = model('AdminLogic','logic');
+            $logic_login = $logic_model->login($data);
+            if (!$logic_login['code']) {
+                $admin_info = $logic_login['info'];
+                if ($admin_info['delete_status'] == 0) {  //账号被高级别管理员停用
+                    $this->error("您的管理员账号已被停用，请联系上级管理员",U('index/admin/login'));
                 }
+                session('uid',$admin_info['uid']);
+                session('role_id',$admin_info['role_id']);
+                session('role_name',$admin_info['role_name']);
+                session('admin_name',$admin_info['name']);
+                session('act_list',$admin_info['act_list']);
+                M('admin')->where('uid',$admin_info['admin_uid'])->save(array('last_login'=>time(),'last_ip'=>getIP()));
+                adminLog($admin_info['name']."登录");
+                $this->success("登陆成功",U('index/index/index'));
             }else{
-                $this->error("用户名或密码不能为空",U('index/admin/login'));
+                $this->error($logic_login['msg'],U('index/admin/login'));
             }
         }
         return $this->fetch();
@@ -56,23 +55,6 @@ class Admin extends Base{
 
     public function admin_list(){
         $role_id = session('role_id');
-        // dump($role_id);
-        // if ($role_id == 1) { //超级管理员
-        //     $list = M('admin')->field('password',true)->select();
-        // }elseif ($role_id == 2) {  //十二中支机构
-        //     $district = M('admin')->where('uid',$uid)->getField('district');
-        //     $district_id = explode(",",$district);
-        //     // foreach ($district_id as $k => $v) {
-        //     //  $user_id[$k] = M('admin')->where('district',$v)->getField('user_id');
-        //     // }
-        //     $user_id = M('admin')->where('district','in',$district_id)->whereOr('district',$district)->column('user_id');
-        //     // $res = M('task_list')->where($where)->where('uid','in',$user_id)->select();
-        //     $res = M('com_anno')->where('uid','in',$user_id)->select();
-        //     dump($user_id);
-        // }elseif ($role_id == 3) {  //小区居委会
-        //     $user_id = M('admin')->where('uid',$uid)->getField('user_id');
-        //     $res = M('com_anno')->where('uid',$user_id)->select();
-        // }
         $list = M('admin')->field('password',true)->select();
         foreach ($list as $k => $v) {
             $list[$k]['role_name'] = M('admin_role')->where('role_id',$v['role_id'])->getField('role_name');
@@ -89,9 +71,10 @@ class Admin extends Base{
         }
         $act = empty($uid) ? 'add' : 'edit';
         $role = D('admin_role')->where('del_status',0)->where('role_id','neq',1)->select();
-        $role_id = '1,2,4';  //超级管理员、次级管理员、十二中支
+        $role_id = '1';  
         $role_id = explode(',',$role_id);
         $pid_admin = M('admin')->where('role_id','in',$role_id)->field('uid,info')->select();
+        // dump($info);
         $this->assign('act',$act);
         $this->assign('role',$role);
         $this->assign('pid_admin',$pid_admin);
@@ -169,7 +152,7 @@ class Admin extends Base{
             $modules[$val['group']][] = $val;
         }
         //权限组
-        $group = array('course'=>'课程管理','permissions'=>'权限管理','activity'=>'活动管理','report'=>'报表管理');
+        $group = array('goods'=>'商品管理','xuanhui'=>'选惠管理','activity'=>'活动管理','permission'=>'权限管理');
         // dump($modules);
         $this->assign('group',$group);
         $this->assign('modules',$modules);
@@ -232,15 +215,14 @@ class Admin extends Base{
             $info['right'] = explode(',', $info['right']);
             $this->assign('info',$info);
         }
-        $group = array('course'=>'课程管理','permissions'=>'权限管理','activity'=>'活动管理','report'=>'报表管理');
+        $group = array('goods'=>'商品管理','xuanhui'=>'选惠管理','activity'=>'活动管理','permission'=>'权限管理');
         $planPath = APP_PATH.'index/controller';
         $planList = array();
-        $dirRes   = opendir($planPath);
+        $dirRes = opendir($planPath);
         while($dir = readdir($dirRes))
         {
-            if(!in_array($dir,array('.','..','.svn')))
-            {
-                $planList[] = basename($dir,'.php');
+            if(!in_array($dir,array('.','..','.svn'))){
+                $planList[] = basename($dir,'.php');    //文件列表
             }
         }
         // dump($planList);
@@ -275,7 +257,7 @@ class Admin extends Base{
                 $res = M('system_menu')->add($data);
                 if ($res) {
                     adminLog(session('admin_name')."添加新权限--".$data['name']);
-                    $this->success('操作成功',U('admin/right_info',array('id'=>$data['id'])));
+                    $this->success('操作成功',U('admin/right_info',array('id'=>$res)));
                 }else{
                     $this->success('操作失败',U('admin/right_info',array('id'=>$data['id'])));
                 }

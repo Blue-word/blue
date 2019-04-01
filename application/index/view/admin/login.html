@@ -33,8 +33,8 @@
                 <div class="form-group">
                     <input type="password" name="password" class="form-control" placeholder="密码" required="" style="border-radius: 20px;">
                 </div>
+                <input type="hidden" name="__token__" value="{$Request.token}" />
                 <button type="submit" class="btn btn-primary block full-width m-b">登 录</button>
-
 
                 <p class="text-muted text-center"> <a href="login.html#"><small>忘记密码了？</small></a> | <a href="register.html">注册一个新账号</a>
                 </p>
