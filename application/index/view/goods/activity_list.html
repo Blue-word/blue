@@ -180,13 +180,13 @@
                             var $span = $(event.currentTarget).parent().prev().find("span");
                             $.ajax({
                                 type: 'POST',
-                                url: 'course_handle',
+                                url: 'activity_handle',
                                 dataType: 'json',
                                 data: {id: id,act: 'ajax',status: 1},
                                 success: function(index){
                                     $(event.currentTarget).replaceWith($(`<button class="btn btn-warning btn-sm demo5" value="${id}">驳回</button>`));
                                     $span.replaceWith('<span class="label label-primary label2">进行中</span>');
-                                    swal("授理成功！", "您已经授理此提现。", "success");
+                                    swal("授理成功！", "您已经授理此活动。", "success");
                                 },
                                 error:function(index) {
                                     console.log(index);
@@ -220,14 +220,14 @@
                             var $span = $(event.currentTarget).parent().prev().find("span");
                             $.ajax({
                                 type: 'POST',
-                                url: 'course_handle',
+                                url: 'activity_handle',
                                 dataType: 'json',
-                                data: {id: id,act: 'ajax',status: -1},
+                                data: {id: id,act: 'ajax',status: 4},
                                 success: function(index){
                                     // console.log(index);
                                     $(event.currentTarget).replaceWith($(`<button class="btn btn-warning btn-sm demo4" value="${id}">审核</button>`));
                                     $span.replaceWith('<span class="label label-default label2">已驳回</span>');
-                                    swal("驳回成功！", "您已经驳回此提现。", "success");
+                                    swal("驳回成功！", "您已经驳回此活动。", "success");
                                 },
                                 error:function(index) {
                                     // console.log(data);
@@ -261,7 +261,7 @@
                             // console.log(id);
                             $.ajax({
                                 type: 'POST',
-                                url: 'course_handle',
+                                url: 'activity_handle',
                                 dataType: 'json',
                                 data: {id: id,act: 'del'},
                                 success: function(index){

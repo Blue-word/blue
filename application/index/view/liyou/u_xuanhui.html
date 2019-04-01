@@ -157,8 +157,8 @@
   <div class="am-g am-g-fixed blog-fixed">
       <div class="am-u-md-8 am-u-sm-12">
       	<div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
-            <h5 class="blog-title" style="margin-top: 1rem;font-size: 14px;">正在派送
-            	<span style="float: right;font-size: 14px;"> <a href="{:U('liyou/u_paiyang_list')}" class="blog-color">@查看更多>></a></span>
+            <h5 class="blog-title" style="margin-top: 1rem;font-size: 14px;">
+            	<span style="float: right;font-size: 14px;"> <a href="{:U('liyou/u_xuanhui_list')}" class="blog-color">@查看更多>></a></span>
             </h5>
         </div>
         <foreach name="list" item="vo" empty="...暂无数据">
@@ -166,7 +166,7 @@
             <h1 style="text-align: center;">{$vo.title}</h1>
             <a href="{:U('liyou/u_tao_info',array('id'=>$vo.id))}">
               <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
-                  <img src="{$vo.cover_pic}" alt="" class="am-img-thumbnail am-radius">
+                  <img src="{$vo.picture}" alt="" class="am-img-thumbnail am-radius">
               </div>
               <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
                   <span style="float: left;padding-left: 10px;"><i class="am-icon-heartbeat active" style="font-size: 14px;"> {$vo.love_num}</i>

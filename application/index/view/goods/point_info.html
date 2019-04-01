@@ -14,10 +14,10 @@
     <!-- <link href="__PUBLIC__/static/css/animate.css" rel="stylesheet"> -->
     <link href="__PUBLIC__/static/css/style.css?v=4.1.0" rel="stylesheet">
     <!-- 百度地图 -->
-    <!-- <style type="text/css">
+    <style type="text/css">
     #container {width: 1230px;height: 380px;overflow: hidden;margin:0;font-family:"微软雅黑";}
     </style>
-    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=uzZhQDkARtTIbiTOydzupoQE7wQ4WkNn"></script> -->
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=uzZhQDkARtTIbiTOydzupoQE7wQ4WkNn"></script>
     <!-- 图片上传 -->
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/static/plugins/fileinput/css/fileinput.min.css" />
     <!-- <link rel="stylesheet" type="text/css" href="__PUBLIC__/static/css/bootstrap.css" /> -->
@@ -32,11 +32,11 @@
             <button class="btn btn-primary btn-circle" type="button" ><i class="fa fa-refresh"></i></button>
         </a> 
     </div>
-    <!-- <div class="row  border-bottom white-bg dashboard-header">
+    <div class="row  border-bottom white-bg dashboard-header">
         <div class="col-sm-12">
             <div id="container"></div>
         </div>
-    </div> -->
+    </div>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-sm-12">
@@ -57,7 +57,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">定位经纬度</label>
                                 <div class="col-sm-10">
-                                    <input type="text" placeholder="例如：116.403963,39.915119" name="coordinate" class="form-control">
+                                    <input type="text" placeholder="例如：116.403963,39.915119" name="coordinate" id="coordinate" class="form-control" value="{$info.coordinate}">
                                     格式：经度,纬度
                                 </div>
                             </div>
@@ -65,24 +65,31 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">点位名称</label>
                                 <div class="col-sm-8">
-                                    <input name="name" type="text" class="form-control" required="" aria-required="true">
+                                    <input name="name" type="text" class="form-control" required="" aria-required="true" value="{$info.name}">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">内容</label>
+                                <div class="col-sm-8">
+                                    <input name="content" type="text" class="form-control" required="" aria-required="true" value="{$info.content}">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">地址</label>
                                 <div class="col-sm-8">
-                                    <input name="address" type="text" class="form-control" required="" aria-required="true">
+                                    <input name="address" type="text" class="form-control" required="" aria-required="true" value="{$info.address}">
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">地址</label>
+                                <label class="col-sm-2 control-label">地区</label>
                                 <div class="col-sm-8">
-                                    <select  class="form-control selectpicker show-tick reset" name="area" data-url="{:U('Goods/getSonCategory')}" data-live-search="true"  data-size="6">
-                                        <option value="1">请选择分类</option>
-                                        <option value="2">请选择分类</option>
-                                        <option value="3">请选择分类</option>
+                                    <select  class="form-control selectpicker" name="area" data-live-search="true"  data-size="6" multiple>
+                                        <option value="1">南京</option>
+                                        <option value="2">苏州</option>
+                                        <option value="3">合肥</option>
                                         <!-- <foreach name="category_first" item="vo">
                                             <option value="{$vo.id}">{$vo.name}</option>
                                         </foreach> -->
@@ -324,7 +331,7 @@
             $("input[value='"+key+"']").remove();
         });
     </script>
-    <!-- <script type="text/javascript">
+    <script type="text/javascript">
         // 百度地图API功能
         // var map = new BMap.Map("allmap");     
         var map = new BMap.Map("container");
@@ -438,7 +445,7 @@
             });
             local.search(myValue);
         }
-    </script> -->
+    </script>
     <script>
         //日期范围限制
         var start = {

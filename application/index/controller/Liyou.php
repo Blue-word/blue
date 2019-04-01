@@ -26,7 +26,7 @@ class Liyou extends Common{
                 $goods_list[$key]['category_name'] = M('category')->where('id',$value['category'])->getField('name');
                 $goods_list[$key]['add_time'] = date('Y-m-d H:i',$value['add_time']);
                 $goods_list[$key]['picture'] = explode(',', $value['picture']);
-                $goods_list[$key]['content'] = mb_substr($value['content'], 0, 10,'utf-8').'...';
+                $goods_list[$key]['content'] = $this->stringModify($value['content'],30,1);
                 $category_name_first = $this->getcFirstCategory('category',3,$value['category']);
                 if (!$category_name_first['code']) {
                     $goods_list[$key]['category_name_first'] = $category_name_first['info']['name'];
@@ -45,7 +45,7 @@ class Liyou extends Common{
             foreach ($activity_list as $key => $value) {
                 $activity_list[$key]['start_time'] = date('Y-m-d H:i',$value['start_time']);
                 $activity_list[$key]['end_time'] = date('Y-m-d H:i',$value['end_time']);
-                $activity_list[$key]['title'] = mb_substr($value['title'], 0, 15,'utf-8').'...';
+                $activity_list[$key]['title'] = $this->stringModify($value['title'],20,1);
                 // $activity_list[$key]['picture'] = $this->imageChange($value['picture']);
             }
         }
@@ -65,7 +65,7 @@ class Liyou extends Common{
                 }
                 $tao_list[$key]['add_time'] = date('Y-m-d H:i',$value['add_time']);
                 // $tao_list[$key]['picture'] = $this->imageChange($value['picture']);
-                $tao_list[$key]['content'] = mb_substr($value['content'], 0, 10,'utf-8').'...';
+                $tao_list[$key]['content'] = $this->stringModify($value['content'],20,1);
             }
         }
         //轮播
@@ -92,7 +92,7 @@ class Liyou extends Common{
                 $list[$key]['category_name'] = M('category')->where('id',$value['category'])->getField('name');
                 $list[$key]['add_time'] = date('Y-m-d H:i',$value['add_time']);
                 $list[$key]['picture'] = explode(',', $value['picture']);
-                $list[$key]['content'] = mb_substr($value['content'], 0, 10,'utf-8').'...';
+                $list[$key]['content'] = $this->stringModify($value['content'],30,1);
                 $category_name_first = $this->getcFirstCategory('category',3,$value['category']);
                 if (!$category_name_first['code']) {
                     $list[$key]['category_name_first'] = $category_name_first['info']['name'];
@@ -109,19 +109,19 @@ class Liyou extends Common{
     }
 
     public function u_xuanhui(){
-        $position = Session::get('position');
+        // $position = Session::get('position');
         $category = input('post.category');
         if ($category) {
             $where['category'] = $category;
         }
-        $where['area'] = array('like',$position.'%');
+        // $where['area'] = array('like',$position.'%');
         $where['is_delete'] = 0;
         $list = M('tao_goods')->where($where)->select();
         if ($list) {
             foreach ($list as $key => $value) {
                 $list[$key]['category_name'] = M('category')->where('id',$value['id'])->getField('name');
                 $list[$key]['add_time'] = date('Y-m-d H:i',$value['add_time']);
-                $list[$key]['content'] = mb_substr($value['content'], 0, 10,'utf-8').'...';
+                $list[$key]['content'] = $this->stringModify($value['content'],30,1);
             }
         }
         
@@ -148,7 +148,7 @@ class Liyou extends Common{
         // $count = M('activity')->where($where)->count();
         // $page = new Page($count,10);
         // $show = $page->show();
-        dump($activity_list);
+        // dump($activity_list);
         $this->assign('list',$activity_list);
         // $this->assign('page',$page);
         // $this->assign('show',$show);
@@ -169,7 +169,7 @@ class Liyou extends Common{
                 $list[$key]['category_name'] = M('category')->where('id',$value['category'])->getField('name');
                 $list[$key]['add_time'] = date('Y-m-d H:i',$value['add_time']);
                 $list[$key]['picture'] = explode(',', $value['picture']);
-                $list[$key]['content'] = mb_substr($value['content'], 0, 10,'utf-8').'...';
+                $list[$key]['content'] = $this->stringModify($value['content'],30,1);
                 $category_name_first = $this->getcFirstCategory('category',3,$value['category']);
                 if (!$category_name_first['code']) {
                     $list[$key]['category_name_first'] = $category_name_first['info']['name'];
@@ -198,7 +198,7 @@ class Liyou extends Common{
             foreach ($list as $key => $value) {
                 $list[$key]['category_name'] = M('category')->where('id',$value['id'])->getField('name');
                 $list[$key]['add_time'] = date('Y-m-d H:i',$value['add_time']);
-                $list[$key]['content'] = mb_substr($value['content'], 0, 10,'utf-8').'...';
+                $list[$key]['content'] = $this->stringModify($value['content'],30,1);
             }
         }
         return $this->fetch();
@@ -306,7 +306,7 @@ class Liyou extends Common{
         if ($type == 1) {   //字符串截取
             $res = mb_substr($str,0,$str_len,'utf-8');
             if (strlen($str) > $str_len) {
-                $res += '...';
+                $res = $res.'...';
             }
         }
         return $res;

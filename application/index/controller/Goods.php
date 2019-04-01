@@ -131,10 +131,10 @@ class Goods extends Common{
             // $data['start_time'] = strtotime($data['start_time']);
             // $data['end_time'] = strtotime($data['end_time']);
             $data['picture'] = implode(',',$data['picture']);
-            dump($data);
+            // dump($data);
             $res = $model->allowField(true)->save($data,['id' => $data['id']]);
-            dump($model->getLastsql());
-            dump($res);
+            // dump($model->getLastsql());
+            // dump($res);
         }
         
         // if($data['act'] == 'del'){
@@ -149,11 +149,11 @@ class Goods extends Common{
             // dump($res);
         }
         
-        // if($res){
-        //     $this->success("操作成功",U('index/pacificocean/course_list'));
-        // }else{
-        //     $this->error("操作失败",U('index/pacificocean/course_info',array('id'=>$data['id'])));
-        // }
+        if($res){
+            $this->success("操作成功",U('index/goods/goods_list'));
+        }else{
+            $this->error("操作失败",U('index/goods/goods_info',array('id'=>$data['id'])));
+        }
     }
 
     public function goods_view(){
@@ -522,10 +522,10 @@ class Goods extends Common{
         
         if($data['act'] == 'edit'){
             $data['picture'] = implode(',',$data['picture']);
-            dump($data);
+            // dump($data);
             $res = $model->allowField(true)->save($data,['id' => $data['id']]);
-            dump($res);
-            dump($model->getLastsql());
+            // dump($res);
+            // dump($model->getLastsql());
         }
         
         // if($data['act'] == 'del'){
@@ -541,11 +541,11 @@ class Goods extends Common{
             // dump($res);
         }
         
-        // if($res){
-        //     $this->success("操作成功",U('index/pacificocean/course_list'));
-        // }else{
-        //     $this->error("操作失败",U('index/pacificocean/course_info',array('id'=>$data['id'])));
-        // }
+        if($res){
+            $this->success("操作成功",U('index/goods/tao_goods_list'));
+        }else{
+            $this->error("操作失败",U('index/goods/tao_goods_info',array('id'=>$data['id'])));
+        }
     }
 
     public function tao_goods_view(){
@@ -638,18 +638,16 @@ class Goods extends Common{
         //     exit(json_encode($data));
         // }
 
-        // if($data['act'] == 'audit' || $data['act'] == 'ajax'){
-        //     $audit_uid = Session::get('uid');
-        //     $res = M('NewCourse')->where('id', $data['id'])->save(['status'=>$data['status'],'audit_uid'=>$audit_uid]);
-        //     // exit(json_encode($data));
-        //     // dump($res);
-        // }
+        if($data['act'] == 'audit' || $data['act'] == 'ajax'){
+            $res = $model->where('id', $data['id'])->save(['status'=>$data['status']]);
+            exit(json_encode($data));
+        }
         
-        // if($res){
-        //     $this->success("操作成功",U('index/pacificocean/course_list'));
-        // }else{
-        //     $this->error("操作失败",U('index/pacificocean/course_info',array('id'=>$data['id'])));
-        // }
+        if($res){
+            $this->success("操作成功",U('index/goods/activity_list'));
+        }else{
+            $this->error("操作失败",U('index/goods/activity_info',array('id'=>$data['id'])));
+        }
     }
 
     public function activity_view(){
@@ -762,11 +760,11 @@ class Goods extends Common{
             $res = $model->where('id', $data['id'])->save(['status'=>$data['status']]);
             exit(json_encode($res));
         }
-        // if($res){
-        //     $this->success("操作成功",U('index/pacificocean/course_list'));
-        // }else{
-        //     $this->error("操作失败",U('index/pacificocean/course_info',array('id'=>$data['id'])));
-        // }
+        if($res){
+            $this->success("操作成功",U('index/goods/point_list'));
+        }else{
+            $this->error("操作失败",U('index/goods/point_info',array('id'=>$data['id'])));
+        }
     }
 
     
