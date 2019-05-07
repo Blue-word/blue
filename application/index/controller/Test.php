@@ -9,15 +9,14 @@ use think\Hook;
 class Test extends Base{
 
     public function _initialize(){
-
     }
 
-     public function test02(){
+    public function test02(){
         $res = $this->exportExcel_2();
         dump($res);
     }
 
-    // 创说会新人签到表导出
+    
     public function test01(){
         $user = M('new_survey_copy')->field($field)->select();
         $subject = "创说会新人签到表导出";
@@ -77,30 +76,6 @@ class Test extends Base{
         // $this->success($result);
     }
 
-    public function asdzxc(){
-        $data = input('post.');
-        $res = M('character_test')->save($data);
-        // $res = M('character_test')->select();
-        dump($data);
-        dump($res);
-    }
-    public function asdzxcd(){
-        // $data = input('post.');
-        // if ($data = input('post.')) {
-        //     $res = M('character_test')->add($data);
-        // // $res = M('character_test')->select();
-        //     dump($data);
-        //     dump($res);
-        // }
-        $list = M('character_test')->where('pid',0)->select();
-        foreach ($list as $k => $v) {
-            $list[$k]['option'] = M('character_test')->where('pid',$v['id'])->select();
-        }
-        
-        dump($list);
-        return $this->fetch();
-    }
-
     public function test03()
     {
         // Hook::add('action_begin','app\index\behavior\Test');
@@ -116,9 +91,86 @@ class Test extends Base{
 
         echo "<br/>";
         echo "end";
+    }
 
+    /**
+     * 拼多多公共请求参数
+     */
+    public function test04($value='')
+    {
+    	$url_param = array (
+            'access_token' => 'asd78172s8ds9a921j9qqwda12312w1w21211',
+            'client_id' =>1,//客户端ID
+            'data_type' => 'JSON',
+            'type'=> '',	//接口名称
+            'timestamp' => time(),
+            'version' => '',
+            'sign' => ''	//签名
+        );
+        return $url_param;
     }
     
+    /**
+     * 商品列表
+     */
+    public function test05()
+    {
+    	$url = 'http://gw-api.pinduoduo.com/api/router?';
+    	$url = $url.http_build_query($this->test04());
+    	$data = httpPost($url, []);
+    	$this->test07($data);
+    	if ($this->error) {
+    		return false;
+    	}
+    	$res = $data['goods_list_get_response'];
+    	$num = ceil($res['total_count']/100);
+    	for ($i=0; $i < $num; $i++) { 
+    		$this->test06();
+    	}
+    	var_dump($url);
+    }
+
+    public function test06($num=1)
+    {
+    	$url = 'http://gw-api.pinduoduo.com/api/router?';
+    	$url = $url.http_build_query($this->test04());
+    	$data = httpPost($url, []);
+    	$this->test07($data);
+    	if ($this->error) {
+    		return false;
+    	}
+    	$res = $data['goods_list_get_response']['goods_list'];
+    	foreach ($res as $key => $value) {
+    		$goods_data[] = [
+	    		'thumb_url' => $value['thumb_url'],
+	    		'goods_id' => $value['goods_id'],
+	    		'goods_name' => $value['goods_name'],
+	    		'goods_quantity' => $value['goods_quantity'],
+	    		'is_onsale' => $value['is_onsale'],
+	    		'sku_list' => $value['sku_list']
+	    	];
+    	}
+    	
+    	
+    	var_dump($url);
+    }
+
+    /**
+     * 校验
+     */
+    public function test07($data)
+    {
+    	$this->error = '';
+		$this->errorcode = 0;
+    	if (!$data['goods_list_get_response']) {
+    		$this->error = $data['error_response']['error_msg'];
+    		$this->errorcode = $data['error_response']['error_code'];
+    	}
+    	if ($data['goods_list_get_response']['total_count'] <= 0) {
+    		$this->error = '暂无商品';
+    		$this->errorcode = 101;
+    	}
+    }
 
 
 }
