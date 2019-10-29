@@ -13,7 +13,7 @@
 return [
     // 应用初始化
     'app_init'     => [
-        // 'app\index\behavior\Test',
+        // 'app\\index\\behavior\\Test',
     ],
     // 应用开始
     'app_begin'    => [
